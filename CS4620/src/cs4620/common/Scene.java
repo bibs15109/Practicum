@@ -237,7 +237,6 @@ public class Scene {
 			//particle.v3_speed.set(0);
 			
 			addObjectWithTransform(new NameBindSceneObject("particle_"+i, particle), M);
-			//
 		}
 		
 		

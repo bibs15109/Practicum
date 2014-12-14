@@ -74,24 +74,47 @@ void main() {
     float e = exp(-pow((theta - 1.5),2) / 2);
     float gauss = coeff * e;
     
-    float gauss2 = abs(cos(phi + 2 * theta + vTime * 6));
-    float gauss3= abs(cos((1 * phi + 1 + 2 * theta) - vTime * 1));
-    float gauss4= abs(cos((2.3 * phi + 2 + 2 *theta) + vTime * 7.8));
-    float gauss5= abs(cos((3.1 * phi + 3 + 2 * theta) + vTime * 1.2));
-    float gauss6= abs(cos((4.5 * phi + 4 + 2 * theta) - vTime * 3));
+//    float gauss2 = abs(cos(phi + 2 * theta + vTime * 6));
+//    float gauss3= abs(cos((1 * phi + 1 + 2 * theta) - vTime * 1));
+//    float gauss4= abs(cos((2.3 * phi + 2 + 2 *theta) + vTime * 7.8));
+//    float gauss5= abs(cos((3.1 * phi + 3 + 2 * theta) + vTime * 1.2));
+//    float gauss6= abs(cos((4.5 * phi + 4 + 2 * theta) - vTime * 3));
+//    float tGauss1 = (gauss2 + gauss3 + gauss4 + gauss5 + gauss6) / 5;
+//    
+//    
+//    float gauss7 = abs(cos(theta + 2 * phi + vTime));
+//    float gauss8= abs(cos((4 * theta + 1 + 2* phi) + vTime * 1.1));
+//    float gauss9= abs(cos((5.4 * theta + 2 + 2 * phi) + vTime * 3.2));
+//    float gauss10= abs(cos((9.3 * theta + 3 + 2 * phi) - vTime * 2.8));
+//    float gauss11= abs(cos((7.9 * theta + 4 + 2 * phi) - vTime * 1.3));
+//    float tGauss2 = (gauss7 + gauss8 + gauss9 + gauss10 + gauss11) /5;
+    
+    float gauss2 = abs(cos(phi + 2 * theta + vTime * 6)+ cos(2*worldPos.x+vTime*4));
+    float gauss3= abs(cos((1 * phi + 1 + 3.1 * theta) - vTime * 1)+ cos(worldPos.y+vTime*4));
+    float gauss4= abs(cos((2 * phi + 2 + 3.1 *theta) + vTime * 7.8)+ cos(4*worldPos.x+vTime*4));
+    float gauss5= abs(cos((2 * phi + 3 + 6.2 * theta) + vTime * 1.2)+ cos(3*worldPos.z+vTime));
+    float gauss6= abs(cos((1 * phi + 4 + 1.9 * theta) - vTime * 3)+ cos(4*worldPos.x+vTime*2));
     float tGauss1 = (gauss2 + gauss3 + gauss4 + gauss5 + gauss6) / 5;
     
     
-    float gauss7 = abs(cos(theta + 2 * phi + vTime));
-    float gauss8= abs(cos((4 * theta + 1 + 2* phi) + vTime * 1.1));
-    float gauss9= abs(cos((5.4 * theta + 2 + 2 * phi) + vTime * 3.2));
-    float gauss10= abs(cos((9.3 * theta + 3 + 2 * phi) - vTime * 2.8));
-    float gauss11= abs(cos((7.9 * theta + 4 + 2 * phi) - vTime * 1.3));
+    float gauss7 = abs(cos(theta + 2 * phi + vTime) + + cos(3*worldPos.y+vTime*5));
+    float gauss8= abs(cos((4 * theta + 1 + 4* phi) + vTime * 1.1) + + cos(2*worldPos.x+vTime*5));
+    float gauss9= abs(cos((5.4 * theta - 2 + 3 * phi) + vTime * 3.2) + cos(4*worldPos.y+vTime*5));
+    float gauss10= abs(cos((9.3 * theta + 3 + phi) - vTime * 2.8)+ cos(4*worldPos.y+vTime*3));
+    float gauss11= abs(cos((7.9 * theta + 4 + 5*phi) - vTime * 1.3)+ cos(5*worldPos.z+vTime*1));
     float tGauss2 = (gauss7 + gauss8 + gauss9 + gauss10 + gauss11) /5;
     
-    //    float finalGauss = pow((tGauss1 * tGauss2),3);
     float finalGauss = tGauss2 * tGauss1;
-    vec4 modifier = vec4(0, 0, finalGauss * 1.25,  0);
+    vec4 modifier = vec4(finalGauss/80, finalGauss/80, finalGauss * 5, 0);
     
-    gl_FragColor = (finalColor * .9 + modifier) * exposure;
+//    vec4 modifier = vec4(pow(finalGauss, 4), pow(finalGauss, 4), pow(finalGauss, 4) * 3,  0);
+    
+    if (vTime > 3) {
+        float x = modifier.x  * pow((vTime/3),2);
+        float y = modifier.y;
+        float z = modifier.z * pow(1/(vTime),2);
+        modifier = vec4(x, y, z, 0);
+    }
+    
+    gl_FragColor = (finalColor * .5 + modifier * 30)* exposure;
 }

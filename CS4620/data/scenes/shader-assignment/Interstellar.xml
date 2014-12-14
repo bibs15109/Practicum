@@ -1,0 +1,378 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<scene>
+
+    <object>
+        <name>Primary_cam_1</name>
+        <data type="SceneCamera">
+            <zPlanes>0.02 1000.0</zPlanes>
+            <perspective>0.01 0.01</perspective>
+            <exposure>1</exposure>
+            <rotation>0 0 0</rotation>
+            <translation>0 0 50</translation>
+
+        </data>
+    </object>
+	
+
+	
+    <cubemap>
+        <name>EnvMap</name>
+        <data>
+            <file>data/textures/Envir/Stars2/</file>
+        </data>
+    </cubemap>
+
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- Textures ==============================================-->
+	
+    <texture>
+        <name>StarTexture</name>
+        <data>
+            <file>data/textures/startextures/dark/ostar.jpg</file>
+        </data>
+    </texture>
+
+    <texture>
+        <name>MoonTexture</name>
+        <data>
+            <file>data/textures/MoonLonLat.png</file>
+        </data>
+    </texture>
+	
+	
+	
+	<!-- Materials ==============================================-->
+	
+	<material>
+        <name>StarMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <texture>StarTexture</texture>
+            </diffuse>
+            <shininess>50</shininess>
+        </data>
+    </material>
+	
+	<material>
+        <name>MoonMaterial</name>
+        <data>
+            <type>Phong</type>
+            <diffuse>
+                <texture>MoonTexture</texture>
+            </diffuse>
+            <shininess>1</shininess>
+        </data>
+    </material>
+	
+    <material>
+        <name>CometMaterial</name>
+        <data>
+            <type>Comet</type>
+        </data>
+    </material>
+	
+	
+	<material>
+        <name>Ambient</name>
+        <data>
+            <type>Ambient</type>
+            <diffuse>
+                <color>255 255 255 255</color>
+            </diffuse>
+        </data>
+    </material>
+	
+    <material>
+        <name>NoiseMaterial</name>
+        <data>
+            <type>Noise</type>
+            <diffuse>
+                <texture>StarTexture</texture>
+            </diffuse>
+            <shininess>0</shininess>
+        </data>
+    </material>
+
+    <material>
+        <name>ParticleMaterial</name>
+        <data>
+        	<diffuse>
+        		<texture>MoonTexture</texture>
+        	</diffuse>
+            <type>Particle</type>
+            <shininess>1</shininess>
+        </data>
+    </material>
+	
+	<material>
+        <name>CometMaterial</name>
+        <data>
+            <type>Comet</type>
+            <diffuse>
+                <texture>StarTexture</texture>
+            </diffuse>
+            <shininess>10</shininess>
+        </data>
+    </material>
+	
+	<material>
+		<name>endurance_material</name>
+		<data>
+			<type>Phong_noAmb</type>
+			<diffuse>
+				<color>200 200 200 255</color>
+			</diffuse>
+			<shininess>20</shininess>
+		</data>
+	</material>
+	
+	<material>
+		<name>Mirror</name>
+		<data>
+			<type>ReflectionMap</type>
+		</data>
+	</material>
+	
+	<!-- Meshes ==============================================-->
+	
+	<mesh>
+		<name>Sphere</name>
+		<data>
+			<file>data/meshes/sphere.obj</file>
+		</data>
+	</mesh>
+
+	<mesh>
+        <name>endurance_mesh</name>
+        <data>
+            <file>data/meshes/endurance.obj</file>
+        </data>
+    </mesh>
+	
+	<mesh>
+        <name>engine_flame</name>
+        <data>
+            <file>data/meshes/engine_flame.obj</file>
+        </data>
+    </mesh>
+	
+	
+	<!-- Objects ==============================================-->
+	
+	<object>
+		<name>Star</name>
+		<data>
+			<mesh>Sphere</mesh>
+            <material>NoiseMaterial</material>
+			<scale>2 2 2</scale>
+		</data>
+	</object>
+	
+	<object>
+		<name>Endurance_object</name>
+		<data>
+			<parent>Endurance_parent_object</parent>
+			<mesh>endurance_mesh</mesh>
+			<material>endurance_material</material>
+			<rotation>30 210 0</rotation>
+			<scale>0.005 0.005 0.005</scale>
+		</data>
+	</object>
+	
+	<object>
+		<name>Endurance_parent_object</name>
+		<data>
+		<scale>1 1 1</scale>
+		
+		<translation>25 40 80</translation>
+		</data>
+	</object>
+	
+	<object>
+		<name>Endurance_exterior_cam</name>
+		<data>
+		<parent>Endurance_parent_object</parent>
+		<scale>1 1 1</scale>
+		<translation>0 0 2</translation>
+		</data>
+	</object>
+
+	<!-- Engine Flames & red light -->
+	<object>
+        <name>Endurance_redlight_parent</name>
+        <data>
+			<parent>Endurance_object</parent>
+            <mesh>Sphere</mesh>
+			
+			<translation>0 70 0</translation>
+            <scale>0.01 0.01 0.01</scale>
+            <material>Ambient</material>
+        </data>
+    </object>
+    <object>
+        <name>Endurance_redlight</name>
+        <data type="SceneLight">
+            <parent>Endurance_redlight_parent</parent>
+            <intensity>0.0001 0 0</intensity>
+        </data>
+    </object>
+
+	<object>
+        <name>Endurance_engine1_parent</name>
+        <data>
+			<parent>Endurance_object</parent>
+            <mesh>engine_flame</mesh>
+			
+			<translation>19 10.6 -6.5</translation>
+            <scale>0.1 0.1 0.1</scale>
+            
+
+            <material>Ambient</material>
+        </data>
+    </object>
+    <object>
+        <name>Endurance_engine1</name>
+        <data type="SceneLight">
+            <parent>Endurance_engine1_parent</parent>
+            <intensity>0.0001 0.00002 0</intensity>
+        </data>
+    </object>
+	
+	<object>
+        <name>Endurance_engine2_parent</name>
+        <data>
+			<parent>Endurance_object</parent>
+            <mesh>engine_flame</mesh>
+			
+			<translation>19 -11 -6.5</translation>
+            <scale>0.1 0.1 0.1</scale>
+            <material>Ambient</material>
+        </data>
+    </object>
+    <object>
+        <name>Endurance_engine2</name>
+        <data type="SceneLight">
+            <parent>Endurance_engine2_parent</parent>
+            <intensity>0.0001 0.00002 0</intensity>
+        </data>
+    </object>
+	
+	<object>
+        <name>Endurance_engine3_parent</name>
+        <data>
+			<parent>Endurance_object</parent>
+            <mesh>engine_flame</mesh>
+			
+			<translation>-19.5 11 -6.5</translation>
+            <scale>0.1 0.1 0.1</scale>
+            <material>Ambient</material>
+        </data>
+    </object>
+    <object>
+        <name>Endurance_engine3</name>
+        <data type="SceneLight">
+            <parent>Endurance_engine3_parent</parent>
+            <intensity>0.0001 0.00002 0</intensity>
+        </data>
+    </object>
+	
+	<object>
+        <name>Endurance_engine4_parent</name>
+        <data>
+			<parent>Endurance_object</parent>
+            <mesh>engine_flame</mesh>
+			
+			<translation>-19.5 -10.6 -6.5</translation>
+            <scale>0.1 0.1 0.1</scale>
+            
+
+            <material>Ambient</material>
+        </data>
+    </object>
+    <object>
+        <name>Endurance_engine4</name>
+        <data type="SceneLight">
+            <parent>Endurance_engine4_parent</parent>
+            <intensity>0.0001 0.00002 0</intensity>
+        </data>
+    </object>
+	
+	<object>
+		<name>Solarpanel1</name>
+		<data>
+			<mesh>Plane</mesh>
+			<parent>Endurance_object</parent>
+			<material>Mirror</material>
+			<rotation>90 0 0</rotation>
+			<scale>1 1 1</scale>
+		</data>
+	</object>
+    
+	<!-- Misc ==============================================-->
+	
+    <mesh>
+        <name>SkyBox.obj</name>
+        <data>
+            <file>data/meshes/skybox.obj</file>
+        </data>
+    </mesh>
+    
+    <material>
+        <name>EnvironmentLight</name>
+        <data>
+            <type>Environment</type>
+        </data>
+    </material>
+    
+    <object>
+        <name>SkyBox</name>
+        <data>
+            <mesh>SkyBox.obj</mesh>
+            <material>EnvironmentLight</material>
+        </data>
+    </object>
+	
+	
+
+ 
+	
+	
+    
+	<!-- Lights ==============================================-->
+
+    <!-- <object>
+        <name>Light_1_parent</name>
+        <data>
+            <mesh>Sphere</mesh>
+            <scale>0.1 0.1 0.1</scale>
+            <translation>0 0 0</translation>
+            <material>Ambient</material>
+        </data>
+    </object> -->
+    <object>
+        <name>Light_1</name>
+        <data type="SceneLight">
+            <intensity>150 150 500</intensity>
+        </data>
+    </object>
+    
+
+    
+    <object>
+        <name>AmbientLight</name>
+        <data type="SceneLight">
+            <intensity>.21 .17 .11</intensity>
+            <isAmbient>true</isAmbient>
+        </data>
+    </object>
+	
+    
+</scene>
