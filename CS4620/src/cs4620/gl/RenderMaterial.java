@@ -10,8 +10,10 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL20;
 
+import blister.GameTime;
 import cs4620.common.Material;
 import cs4620.common.Material.InputProvider.Type;
+import cs4620.common.SceneObject;
 import egl.GL;
 import egl.GL.TextureTarget;
 import egl.GL.TextureUnit;
@@ -29,6 +31,7 @@ import egl.math.Vector3d;
 import egl.math.Vector4;
 import ext.java.IOUtils;
 import cs4620.common.texture.TexCubeMap;
+
 
 
 public class RenderMaterial implements IDisposable {
@@ -107,7 +110,8 @@ public class RenderMaterial implements IDisposable {
 	public final Material sceneMaterial;
 	
 	public int unWorld, unWorldIT, unV, unP, unVP, unLPos, unLIntensity, unLCount, unCubeMap, unWorldCam, 
-		unShininess, unRoughness, unDispMagnitude, unAmbientLIntensity, unExposure, unTime, unVelocity;
+		unShininess, unRoughness, unDispMagnitude, unAmbientLIntensity, unExposure, unTime, unVelocity, unGameTime,
+		unCometColor;
 	
 	float periodic_counter = 0,
 		periodic_velocity = 1;
@@ -190,6 +194,12 @@ public class RenderMaterial implements IDisposable {
 		unTime = program.getUniform("vTime");
 		unVelocity= program.getUniform("vVelocity");
 		
+		// Game Time:
+		unGameTime = program.getUniform("gameTime");
+		
+		// Comet Color:
+		unCometColor = program.getUniform("cometColor");
+		
 		// Try with and without suffix...
 		unLPos = program.getUniform("lightPosition");
 		if (unLPos == GL.BadUniformLocation) {
@@ -254,9 +264,12 @@ public class RenderMaterial implements IDisposable {
 		if(unWorldIT != GL.BadUniformLocation) {
 			GLUniform.setST(unWorldIT, o.mWorldTransformIT, false);
 		}
+		
+		if(unCometColor != GL.BadUniformLocation) GL20.glUniform3f(unCometColor, o.sceneObject.cometColor.x, o.sceneObject.cometColor.y, o.sceneObject.cometColor.z);
+		
 	}
 	
-	public void useCameraAndLights(RenderCamera c, ArrayList<RenderLight> lights, int s, int lightCount) {
+	public void useCameraAndLights(RenderCamera c, ArrayList<RenderLight> lights, int s, int lightCount, GameTime gameTime) {
 		// Use camera
 		if(unV != GL.BadUniformLocation) {
 			GLUniform.setST(unV, c.mView, false);
@@ -327,10 +340,15 @@ public class RenderMaterial implements IDisposable {
 			GL20.glUniform3f(unAmbientLIntensity, (float)ambientLightColor.x, (float)ambientLightColor.y, (float)ambientLightColor.z);
 		}
 		
-		/////////
+		/////////  Jason Zhao:
 		periodic_counter+= .01;
 		periodic_velocity += (9.8 * periodic_counter) * .1;
 		if(unTime != GL.BadUniformLocation) GL20.glUniform1f(unTime,  periodic_counter);
 		if(unVelocity != GL.BadUniformLocation) GL20.glUniform1f(unVelocity, periodic_velocity);
+		if(unGameTime != GL.BadUniformLocation) GL20.glUniform1f(unGameTime,  (float)gameTime.total);
+		
+		
+		//System.out.println((float)gameTime.total);
+		
 	}
 }

@@ -33,10 +33,11 @@ public class SweepSplinePanel extends SplinePanel {
 	@Override
 	public void draw() {
 		GL11.glViewport(this.index * SplinePanel.panelWidth, 0, SplinePanel.panelWidth, SplinePanel.panelHeight);
-		owner.rController.update(owner.renderer, owner.camController);
+		// Jason: 3rd parameter should be gametime from mainGame, but is not passed here, so use null instead;
+		owner.rController.update(owner.renderer, owner.camController, null);
 		
 		if(owner.camController.camera != null){
-			owner.renderer.draw(owner.camController.camera, owner.rController.env.lights, RasterizerState.CULL_NONE);
+			owner.renderer.draw(owner.camController.camera, owner.rController.env.lights, RasterizerState.CULL_NONE, null);
 			if (owner.showGrid)
 				owner.gridRenderer.draw(owner.camController.camera);
 		}

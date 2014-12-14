@@ -15,6 +15,7 @@ public class AnimationObject{
 	public AnimationObject(Scene scene) {
 		this.scene = scene;
 		this.tInverse = scene.objects.get("Star").transformation.clone().invert();
+		//scene.objects.get("Star")
 	}
 	
 	/**Rotates an object given that objects mesh and material
@@ -39,6 +40,7 @@ public class AnimationObject{
 	
 	public void reset(String name) {
 		SceneObject star = scene.objects.get(name);
+		
 		star.transformation.mulAfter(this.tInverse);
 	}
 	

@@ -1,5 +1,6 @@
 package blister;
 
+import cs4621.celestialEvent.CelestialEventHandler;
 import egl.math.Vector2;
 
 /**
@@ -84,4 +85,7 @@ public interface IGameScreen {
      * @param gameTime Current Time From Start Of Program
      */
     void draw(GameTime gameTime);
+    
+    //CelestialEventHandler getCelestialEventHandler();
+    
 }

@@ -13,7 +13,8 @@ public class MeshGenCylinder extends MeshGenerator {
 	@Override
 	public void generate(MeshData outData, MeshGenOptions opt) {
 		// TODO#A1 SOLUTION START
-
+		
+		
 		// Calculate Vertex And Index Count
 		outData.vertexCount = (opt.divisionsLongitude) * 4 + 2;
 		int tris = (opt.divisionsLongitude * 2) + (2 * (opt.divisionsLongitude - 2));

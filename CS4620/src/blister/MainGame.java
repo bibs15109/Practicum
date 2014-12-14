@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.PixelFormat;
 
+import cs4621.celestialEvent.CelestialEvent;
 import blister.input.KeyPressEventArgs;
 import blister.input.KeyboardEventDispatcher;
 import blister.input.KeyboardKeyEventArgs;
@@ -146,6 +147,7 @@ public abstract class MainGame implements IDisposable {
 		else {
 			screen.setRunning();
 			screen.onEntry(lastTime);
+			
 		}
 
 		lastNS = System.nanoTime();
@@ -155,6 +157,7 @@ public abstract class MainGame implements IDisposable {
 	 */
 	private void createDisplay() {
 		try{
+//			Display.setFullscreen(true);
 			Display.setDisplayMode(new DisplayMode(eWR.width, eWR.height));
 			org.lwjgl.opengl.PixelFormat pf = new PixelFormat(8, 24, 8);
 			ContextAttribs ca = new ContextAttribs(2, 1);
@@ -334,7 +337,7 @@ public abstract class MainGame implements IDisposable {
 	 */
 	public void run() {
 		init();
-
+		
 		isRunning = true;
 		while(isRunning) {
 			Display.sync(60);
@@ -343,7 +346,6 @@ public abstract class MainGame implements IDisposable {
 			refreshElapsedTime();
 			onUpdateFrame();
 			onRenderFrame();
-
 			Display.update();
 		}
 	}

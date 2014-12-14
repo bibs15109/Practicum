@@ -4,8 +4,14 @@ import cs4620.common.SceneCamera;
 import cs4620.common.SceneObject;
 import egl.math.Matrix4;
 import egl.math.Vector2;
+import egl.math.Vector3;
 
 public class RenderCamera extends RenderObject {
+	
+	// Jason Zhao:
+	public Vector3 camSpeed = new Vector3(0,0,0);
+	
+	
 	/**
 	 * Reference to Scene counterpart of this camera
 	 */

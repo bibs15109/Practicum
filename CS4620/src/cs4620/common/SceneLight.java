@@ -11,10 +11,26 @@ public class SceneLight extends SceneObject {
 	 */
 	public final Vector3d intensity = new Vector3d(1.0);
 	public boolean isAmbient = false;
+	public Vector3d defaultIntensity = new Vector3d(intensity);
 	
 	public void setIntensity(Vector3d v) {
 		intensity.set(v);
+		defaultIntensity.set(intensity);
 	}
+	
+	public void resetIntensity(){
+		intensity.set(defaultIntensity);
+	}
+	
+	// Jason Zhao: change the scale of the intensity
+	public void mulIntensity(Vector3d v) {
+		intensity.mul(v);
+	}
+	
+	public void mulIntensity(float s) {
+		intensity.mul(s);
+	}
+	
 	public void setIsAmbient(boolean isAmbient) {
 		this.isAmbient = isAmbient;
 	}

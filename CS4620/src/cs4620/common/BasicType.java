@@ -4,5 +4,6 @@ public enum BasicType {
 	Sphere,
 	Cube,
 	Cylinder,
-	TriangleMesh
+	TriangleMesh,
+	ParticleCloud
 }

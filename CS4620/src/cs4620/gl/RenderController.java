@@ -3,6 +3,7 @@ package cs4620.gl;
 import java.sql.Time;
 import java.util.ArrayList;
 
+import blister.GameTime;
 import cs4620.common.Material;
 import cs4620.common.Mesh;
 import cs4620.common.Scene;
@@ -45,7 +46,7 @@ public class RenderController implements IDisposable {
 	}
 	
 	// called ~60 times a sec
-	public void update(Renderer r, CameraController camController) {
+	public void update(Renderer r, CameraController camController, GameTime gametime) {
 		
 		ArrayList<SceneEvent> le = new ArrayList<>();
 		queue.getEvents(le);
@@ -132,15 +133,15 @@ public class RenderController implements IDisposable {
 		}
 		
 		////////////////////////////////
-		timeDelta +=(1.d/60.d);
-		double seconds= Math.floor(timeDelta);
-//		System.out.println(seconds);
+		
+		//System.out.println(seconds);
+		/*
 		try {
 			AnimationObject ao = new AnimationObject(scene);
 			ao.reset("Star");
 			ao.rotateObject("Star", 0.f, (float)t / 4, 0.f);
-			if (seconds > 10) {
-				ao.wobbleRadius("Star", t/30 * Math.min((timeDelta - 4) / 7, 20));
+			if (gametime.elapsed > 10) {
+				ao.wobbleRadius("Star", t/30 * Math.min((gametime.elapsed - 4) / 7, 20));
 			}
 			else {
 				ao.wobbleRadius("Star", t / 30);
@@ -148,5 +149,6 @@ public class RenderController implements IDisposable {
 			t += (Math.random()/2 + .5) * 1;
 			
 		} catch(Exception e) {}
+		*/
 	}
 }

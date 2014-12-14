@@ -3,6 +3,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Random;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -17,6 +18,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import egl.math.Matrix4;
 import egl.math.Vector3;
 import cs4620.common.event.SceneCollectionModifiedEvent;
 import cs4620.common.event.SceneDataType;
@@ -27,8 +29,12 @@ import cs4620.common.texture.TexGenSphereNormalMap;
 import cs4620.common.texture.TexGenUVGrid;
 import cs4620.mesh.gen.MeshGenCube;
 import cs4620.mesh.gen.MeshGenCylinder;
+import cs4620.mesh.gen.MeshGenParticle;
 import cs4620.mesh.gen.MeshGenPlane;
 import cs4620.mesh.gen.MeshGenSphere;
+import cs4620.mesh.gen.MeshGenParticleCloud;
+import cs4620.scene.ViewScreen;
+import cs4621.celestialEvent.ParticleMoonletEvent;
 
 
 
@@ -41,6 +47,11 @@ public class Scene {
 	public static final HashSet<String> DEFAULT_MATERIALS = new HashSet<>(Arrays.asList("Generic"));
 	public static final HashSet<String> DEFAULT_TEXTURES = new HashSet<>(Arrays.asList("Checker Board", "UV"));
 
+	// Jason Zhao:
+	public static boolean bBegin = false;
+	public static boolean bExterior_cam_active = false;
+	public static boolean bFlightControl = false;
+	
 	/**
 	 * Container Of Unique Meshes
 	 */
@@ -108,6 +119,9 @@ public class Scene {
 		m = new Mesh();
 		m.setGenerator(new MeshGenPlane());
 		addMesh(new NameBindMesh("Plane", m));
+		m = new Mesh();
+		m.setGenerator(new MeshGenParticleCloud());
+		addMesh(new NameBindMesh("ParticleCloud", m));
 
 		// Add Simple Generated Textures
 		Texture t = new Texture();
@@ -124,10 +138,141 @@ public class Scene {
 		Material mat = new Material();
 		mat.setType(Material.T_AMBIENT);
 		addMaterial(new NameBindMaterial("Generic", mat));
+		mat = new Material();
+		mat.setType(Material.T_LAMBERTIAN);
+		addMaterial(new NameBindMaterial("Lambertian", mat));
 
 		// Add The Root Node
 		SceneObject so = new SceneObject();
 		addObject(new NameBindSceneObject(ROOT_NODE_NAME, so));
+		
+		// Programmatically add objects (particle cloud approximation);
+		
+		m = new Mesh();
+		m.setGenerator(new MeshGenParticle());
+		addMesh(new NameBindMesh("particle", m));
+		
+		// Jason Zhao: maybe can move this to ViewScreen.build();
+		int iNumEjection = 500, iNumMoonlet = 2000;
+		
+		// Particle Ejection Event
+		for (int i = 0; i < iNumEjection; i++){
+			SceneObject particle = new SceneObject();
+			particle.setMesh("particle");
+			particle.setMaterial("Generic");
+//			addObject(new NameBindSceneObject("particle_"+i, particle) );
+		}
+		
+		// ParticleMoonlet inner ring Event
+		for (int i = iNumEjection; i < iNumEjection + iNumMoonlet/2; i++){
+			SceneObject particle = new SceneObject();
+			particle.setMesh("particle");
+			particle.setMaterial("ParticleMaterial");
+			
+			//particle.v3_speed.set((float)(Math.random()-0.5)*2, (float)(Math.random()-0.5)/5, (float)(Math.random()-0.5)*2);
+			
+			Matrix4 M;
+			Random rand = new Random();
+			double dDistroFunc = 7.2+rand.nextGaussian()*1.2;
+			if (dDistroFunc < 4){dDistroFunc = 4;}
+			if (rand.nextBoolean()){
+				M = Matrix4.createScale((float)(Math.random()*4+1))
+						.mulAfter(Matrix4.createTranslation(new Vector3((float)dDistroFunc,(float)(rand.nextGaussian()/2),0))
+						.mulAfter(Matrix4.createRotationY((float)(rand.nextGaussian()/8*Math.PI))));
+			} else {
+				M = Matrix4.createScale((float)(Math.random()*4+1))
+						.mulAfter(Matrix4.createTranslation(new Vector3((float)dDistroFunc,(float)(rand.nextGaussian()/2),0))
+						.mulAfter(Matrix4.createRotationY((float)((rand.nextGaussian()/8+1)*Math.PI))));
+			}
+			
+			
+			
+			
+			M.mulBefore(Matrix4.createRotationX((float)(Math.random()*Math.PI)));
+			M.mulBefore(Matrix4.createRotationY((float)(Math.random()*Math.PI)));
+			M.mulBefore(Matrix4.createRotationZ((float)(Math.random()*Math.PI)));
+			
+			particle.v3_speed.set(M.getTrans());
+			particle.v3_speed.cross(new Vector3(0,1,0));
+			float fDist = particle.v3_speed.len();
+			particle.v3_speed.div(fDist);
+			//particle.v3_speed.mul((float)rand.nextGaussian()/5+0.8f);
+			
+			particle.v3_speed.mul((float)Math.sqrt(ParticleMoonletEvent.GConstant/fDist));
+			//particle.v3_speed.y = (float)(Math.random()/5*-Math.signum(M.getTrans().y));
+			//particle.v3_speed.set(0);
+			addObjectWithTransform(new NameBindSceneObject("particle_"+i, particle), M);
+		}
+		
+		// ParticleMoonlet Outer ring event:
+		for (int i = iNumEjection + iNumMoonlet/2; i < iNumEjection + iNumMoonlet; i++){
+			SceneObject particle = new SceneObject();
+			particle.setMesh("particle");
+			particle.setMaterial("ParticleMaterial");
+			
+			//particle.v3_speed.set((float)(Math.random()-0.5)*2, (float)(Math.random()-0.5)/5, (float)(Math.random()-0.5)*2);
+			
+			Matrix4 M;
+			Random rand = new Random();
+			
+			
+			
+			double dDistroFunc = 15+rand.nextGaussian()*1.5;
+			if (dDistroFunc < 10){dDistroFunc = 10;}
+			M = Matrix4.createScale((float)(Math.random()*4+1))
+					.mulAfter(Matrix4.createTranslation(new Vector3((float)dDistroFunc,(float)(rand.nextGaussian()/2),0))
+					.mulAfter(Matrix4.createRotationY((float)(Math.random()*2*Math.PI))));
+			M.mulBefore(Matrix4.createRotationX((float)(Math.random()*Math.PI)));
+			M.mulBefore(Matrix4.createRotationY((float)(Math.random()*Math.PI)));
+			M.mulBefore(Matrix4.createRotationZ((float)(Math.random()*Math.PI)));
+			
+			particle.v3_speed.set(M.getTrans());
+			particle.v3_speed.cross(new Vector3(0,1,0));
+			float fDist = particle.v3_speed.len();
+			particle.v3_speed.div(fDist);
+			//particle.v3_speed.mul((float)rand.nextGaussian()/5+0.8f);
+			
+			particle.v3_speed.mul((float)Math.sqrt(ParticleMoonletEvent.GConstant/fDist));
+			//particle.v3_speed.y = (float)(Math.random()/5*-Math.signum(M.getTrans().y));
+			//particle.v3_speed.set(0);
+			
+			addObjectWithTransform(new NameBindSceneObject("particle_"+i, particle), M);
+		}
+		
+		
+		
+		
+		
+		// Comet Event
+		for (int i = 1; i <= ViewScreen.iNumComets; i++){
+			SceneObject comet = new SceneObject();
+			comet.setMesh("Sphere");
+			comet.setMaterial("CometMaterial");
+			addObjectWithTransform(new NameBindSceneObject("comet_"+i, comet), Matrix4.createTranslation(new Vector3(999, 999, 999)));
+		}
+		
+		
+		
+		// Deep Impact Event:
+		int iNumDebris = 400;
+		SceneObject deepimpact = new SceneObject();
+		deepimpact.setMesh("Sphere");
+		deepimpact.setMaterial("Generic");
+		addObjectWithTransform(new NameBindSceneObject("comet_2", deepimpact), Matrix4.createTranslation(new Vector3(999, 999, 999)));
+		deepimpact = new SceneObject();
+		deepimpact.setMesh("Sphere");
+		deepimpact.setMaterial("Generic");
+		addObjectWithTransform(new NameBindSceneObject("comet_3", deepimpact), Matrix4.createTranslation(new Vector3(999, 999, 999)));
+		// Ejection for deep impact:
+		for (int i = 0; i < iNumDebris; i++){
+			SceneObject debris = new SceneObject();
+			debris.setMesh("particle");
+			debris.setMaterial("MoonMaterial");
+			addObject(new NameBindSceneObject("debris_"+i, debris) );
+		}
+		
+
+		
 	}
 
 	public void addListener(SceneEventQueue q){
@@ -286,6 +431,17 @@ public class Scene {
 		if(o.data.parent == null && !o.name.equals(ROOT_NODE_NAME)) o.data.parent = ROOT_NODE_NAME;
 		sendEvent(new SceneCollectionModifiedEvent(SceneDataType.Object, o.name, true));
 	}
+	
+	// Jason Zhao: add object with a given transformation:
+	public void addObjectWithTransform(NameBindSceneObject o, Matrix4 transform) {
+		o.data.transformation.set(transform);
+		objects.add(o.data);
+		objects.setName(o.data, o.name);
+		if(o.data.parent == null && !o.name.equals(ROOT_NODE_NAME)) o.data.parent = ROOT_NODE_NAME;
+		sendEvent(new SceneCollectionModifiedEvent(SceneDataType.Object, o.name, true));
+	}
+	
+	
 	public void removeObject(String name) {
 		// Can't Delete The Root
 		if(name.equals(ROOT_NODE_NAME)) return;

@@ -1,5 +1,6 @@
 package blister;
 
+import cs4621.celestialEvent.CelestialEventHandler;
 import egl.math.Vector2;
 
 public abstract class GameScreen implements IGameScreen {
@@ -54,4 +55,5 @@ public abstract class GameScreen implements IGameScreen {
 
     public abstract void update(GameTime gameTime);
     public abstract void draw(GameTime gameTime);
+
 }

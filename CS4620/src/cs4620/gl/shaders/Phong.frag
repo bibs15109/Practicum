@@ -46,6 +46,7 @@ void main() {
 	  // calculate ambient term
 	  vec4 Iamb = getDiffuseColor(fUV);
 	  Iamb = clamp(Iamb, 0.0, 1.0);
+	  
 
 	  finalColor += vec4(lightIntensity[i], 0.0) * (Idiff + Ispec) / (r*r) + vec4(ambientLightIntensity, 0.0) * Iamb;
 	}

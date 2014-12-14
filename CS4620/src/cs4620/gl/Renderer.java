@@ -6,6 +6,7 @@ import java.util.Comparator;
 
 import org.lwjgl.opengl.GL11;
 
+import blister.GameTime;
 import egl.BlendState;
 import egl.DepthState;
 import egl.GLProgram;
@@ -72,7 +73,7 @@ public class Renderer implements IDisposable {
 		}
 	}
 
-	public void draw(RenderCamera camera, ArrayList<RenderLight> lights) {
+	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, GameTime gameTime) {
 		DepthState.DEFAULT.set();
 		BlendState.OPAQUE.set();
 		RasterizerState.CULL_CLOCKWISE.set();
@@ -87,7 +88,7 @@ public class Renderer implements IDisposable {
 				material = p.material;
 				material.program.use();
 				material.useMaterialProperties();
-				material.useCameraAndLights(camera, lights, 0, cc);
+				material.useCameraAndLights(camera, lights, 0, cc, gameTime);
 			}
 			if(mesh != p.mesh) {
 				if(mesh != null) mesh.iBuffer.unbind();
@@ -104,7 +105,7 @@ public class Renderer implements IDisposable {
 		}
 	}
 	
-	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, RasterizerState rs) {
+	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, RasterizerState rs, GameTime gameTime) {
 		
 		DepthState.DEFAULT.set();
 		BlendState.OPAQUE.set();
@@ -123,7 +124,7 @@ public class Renderer implements IDisposable {
 				material = p.material;
 				material.program.use();
 				material.useMaterialProperties();
-				material.useCameraAndLights(camera, lights, 0, cc);
+				material.useCameraAndLights(camera, lights, 0, cc, gameTime);
 			}
 			if(mesh != p.mesh) {
 				if(mesh != null) mesh.iBuffer.unbind();
