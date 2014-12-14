@@ -10,23 +10,31 @@ public class CometEvent extends CelestialEvent {
 	//public int iNumParticles = 200;
 	public double dStartTime = 0;
 	public int iObjIndex;
-	public SceneObject soComet = null;
+	public SceneObject[] soComet;
+	public Matrix4[] oldTrans;
 	public static float GConstant = 3f;
 	public Vector3 target = new Vector3(0,0,0);
 	public boolean bHappening = false;
 	public float fImpactSpeed = 0;
+	public int length;
 	
 	private Vector3 dir = new Vector3(0,0,0);
 	
-	public CometEvent(int index){
+	public CometEvent(int index, int ilen){
 		//this.iNumParticles = iNumParticles;
 		dStartTime = 0;
 		iObjIndex = index;
+		length = ilen;
 		bHappening = false;
+		soComet = new SceneObject[length];
+		oldTrans = new Matrix4[length];
+		for(int i = 0; i < length; i++){
+			oldTrans[i] = new Matrix4();
+		}
 	}
 	
-	public CometEvent(int index, Vector3 target){
-		this(index);
+	public CometEvent(int index, int ilen, Vector3 target){
+		this(index, ilen);
 		this.target = target;
 	}
 	
@@ -34,10 +42,25 @@ public class CometEvent extends CelestialEvent {
 		// now assume that there is only 1 star in the center:
 		if (bHappening){
 			float et = (float)gameTime.elapsed;
-			if (soComet.transformation.getTrans().len() > 300){ bHappening = false; soComet.transformation.setIdentity(); return;}
+			if (soComet[0].transformation.getTrans().len() > 300){
+				bHappening = false;
+				soComet[0].transformation.setIdentity();
+				for(int i = 0; i < length-1; i++){
+					soComet[i+1].transformation.set(oldTrans[i]);
+				}
+				return;}
 			
 			dir.normalize().mul(fImpactSpeed*et);
-			soComet.addTranslation(dir);
+			soComet[0].addTranslation(dir);
+			for(int i = 0; i < length-1; i++){
+				soComet[i+1].transformation.set(oldTrans[i]);
+			}
+			
+			for(int i = 0; i < length; i++){
+				oldTrans[i].set(soComet[i].transformation);
+				soComet[i].transformation.mulBefore(Matrix4.createScale((((float) length-i)*((float) length-i))/(length * length)));
+				soComet[i].cometColor.set(((float)length - 1 -i)/(length - 1),((float)length - 1 -i)/(length - 1),1f);
+			}
 			
 			
 		} else {
@@ -46,8 +69,11 @@ public class CometEvent extends CelestialEvent {
 				// setting up a new ejection event:
 				
 				bHappening = true;
-				soComet = app.scene.objects.get("comet_"+iObjIndex);
-				soComet.cometColor.set(new Vector3((float)Math.random(), (float)Math.random(), (float)Math.random()));
+				for(int i = 0; i < length; i++){
+					soComet[i] = app.scene.objects.get("comet_"+iObjIndex+"_"+i);
+				}
+				//soComet[0].cometColor.set(new Vector3((float)Math.random(), (float)Math.random(), (float)Math.random()));
+				soComet[0].cometColor.set(1f,1f,1f);
 				target.set((float)(Math.random()*10+3), (float)(Math.random()*10+3), (float)(Math.random()*10+3));
 				
 				// generate a random sign
@@ -58,17 +84,24 @@ public class CometEvent extends CelestialEvent {
 				float fSignZ = (float)Math.random();
 				if(fSignZ < 0.5){fSignZ = -1;} else {fSignZ = 1;}
 				
-				float fScaleFactor = (float)(Math.random()/10+0.1);
-				soComet.transformation.set(Matrix4.createScale(fScaleFactor));// scale the size of the Comet
+				float fScaleFactor = (float)(Math.random()/20+0.07);
+				soComet[0].transformation.set(Matrix4.createScale(fScaleFactor));// scale the size of the Comet
 				
 				float fDistanceFactor = 50;
-				soComet.transformation.mulBefore(Matrix4.createTranslation
+				soComet[0].transformation.mulBefore(Matrix4.createTranslation
 									((float)(Math.random()*fDistanceFactor+fDistanceFactor)*(fSignX)/fScaleFactor, 
 									(float)(Math.random()*fDistanceFactor+fDistanceFactor)*(fSignY)/fScaleFactor, 
 									(float)(Math.random()*fDistanceFactor+fDistanceFactor)*(fSignZ)/fScaleFactor));
 				fImpactSpeed = (float)(Math.random()*8) + 10; 
-				dir.set(target.sub(soComet.transformation.getTrans()));
+				dir.set(target.sub(soComet[0].transformation.getTrans()));
 				dStartTime = gameTime.total;
+				for(int i = 1; i < length; i++){
+					soComet[i].cometColor.set(soComet[0].cometColor);
+					soComet[i].transformation.set(soComet[0].transformation);
+				}
+				for(int i = 0; i < length; i++){
+					oldTrans[i].set(soComet[i].transformation);
+				}
 			}
 		}
 		

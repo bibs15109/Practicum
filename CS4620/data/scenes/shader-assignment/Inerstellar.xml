@@ -35,7 +35,7 @@
     <texture>
         <name>StarTexture</name>
         <data>
-            <file>data/textures/startextures/dark/ostar.jpg</file>
+            <file>data/textures/startextures/bright/kstar.jpg</file>
         </data>
     </texture>
 
@@ -104,11 +104,7 @@
     <material>
         <name>ParticleMaterial</name>
         <data>
-        	<diffuse>
-        		<texture>MoonTexture</texture>
-        	</diffuse>
             <type>Particle</type>
-            <shininess>1</shininess>
         </data>
     </material>
 	
@@ -184,6 +180,8 @@
 			<material>endurance_material</material>
 			<rotation>30 210 0</rotation>
 			<scale>0.005 0.005 0.005</scale>
+			
+			
 		</data>
 	</object>
 	
@@ -305,16 +303,77 @@
         </data>
     </object>
 	
-	<object>
+<!-- 	<object>
 		<name>Solarpanel1</name>
 		<data>
 			<mesh>Plane</mesh>
 			<parent>Endurance_object</parent>
 			<material>Mirror</material>
 			<rotation>90 0 0</rotation>
-			<scale>1 1 1</scale>
+			<scale>0.483 0.233 1</scale>
+            <translation>2.263 -0.06 0.504</translation>
 		</data>
 	</object>
+
+    <object>
+        <name>Solarpanel1111</name>
+        <data>
+            <mesh>Plane</mesh>
+            <parent>Endurance_object</parent>
+            <material>Mirror</material>
+            <rotation>90 0 0</rotation>
+        </data>
+    </object>
+
+    <object>
+        <name>Solarpanel2</name>
+        <data>
+            <mesh>Plane</mesh>
+            <parent>Endurance_object</parent>
+            <material>Mirror</material>
+            <rotation>90 0 0</rotation>
+        </data>
+    </object>
+
+    <object>
+        <name>Solarpanel3</name>
+        <data>
+            <mesh>Plane</mesh>
+            <parent>Endurance_object</parent>
+            <material>Mirror</material>
+            <rotation>90 0 0</rotation>
+        </data>
+    </object>
+
+    <object>
+        <name>Solarpanel4</name>
+        <data>
+            <mesh>Plane</mesh>
+            <parent>Endurance_object</parent>
+            <material>Mirror</material>
+            <rotation>90 0 0</rotation>
+        </data>
+    </object>
+
+    <object>
+        <name>Solarpanel5</name>
+        <data>
+            <mesh>Plane</mesh>
+            <parent>Endurance_object</parent>
+            <material>Mirror</material>
+            <rotation>90 0 0</rotation>
+        </data>
+    </object>
+
+    <object>
+        <name>Solarpanel6</name>
+        <data>
+            <mesh>Plane</mesh>
+            <parent>Endurance_object</parent>
+            <material>Mirror</material>
+            <rotation>90 0 0</rotation>
+        </data>
+    </object> -->
     
 	<!-- Misc ==============================================-->
 	
@@ -348,7 +407,7 @@
     
 	<!-- Lights ==============================================-->
 
-    <!-- <object>
+    <object>
         <name>Light_1_parent</name>
         <data>
             <mesh>Sphere</mesh>
@@ -357,11 +416,12 @@
 
             <material>Ambient</material>
         </data>
-    </object> -->
+    </object>
     <object>
         <name>Light_1</name>
         <data type="SceneLight">
-            <intensity>150 150 500</intensity>
+            <parent>Light_1_parent</parent>
+            <intensity>80000 80000 80000</intensity>
         </data>
     </object>
     

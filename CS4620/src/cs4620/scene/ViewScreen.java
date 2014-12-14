@@ -54,7 +54,8 @@ public class ViewScreen extends GameScreen {
 	// Jason: event handler:
 	public CelestialEventHandler celestialEventHandler;
 	public float bCentralStarSize = 2;
-	public static int iNumComets = 20;
+	public static int iNumComets = 5;
+	public static int iCometLength = 30;
 	
 	protected int camIndex = 1;
 	// cam index 1
@@ -127,12 +128,10 @@ public class ViewScreen extends GameScreen {
 		moonlet_1.startEvent();
 		
 		for (int i = 1; i <= iNumComets; i++){
-			CometEvent comet = new CometEvent(i);
+			CometEvent comet = new CometEvent(i,iCometLength);
 			this.celestialEventHandler.addEvent(comet);
 			comet.startEvent();
 		}
-		
-		
 		
 		DeepImpactEvent impact_1 = new DeepImpactEvent(2, 0, 199, 2);
 		this.celestialEventHandler.addEvent(impact_1);

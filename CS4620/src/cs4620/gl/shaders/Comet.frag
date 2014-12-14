@@ -9,6 +9,6 @@ void main() {
 	vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
 	finalColor += vec4(cometColor, 0.0);
 	
-	finalColor += vec4(cos(2*PI*vTime)/2, cos(2*PI*vTime)/2, cos(2*PI*vTime)/2, 0.0);
+	//finalColor += vec4(cos(2*PI*vTime)/2, cos(2*PI*vTime)/2, cos(2*PI*vTime)/2, 0.0);
     gl_FragColor = finalColor;
 }

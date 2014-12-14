@@ -160,14 +160,14 @@ public class Scene {
 			SceneObject particle = new SceneObject();
 			particle.setMesh("particle");
 			particle.setMaterial("Generic");
-//			addObject(new NameBindSceneObject("particle_"+i, particle) );
+			//addObject(new NameBindSceneObject("particle_"+i, particle) );
 		}
 		
 		// ParticleMoonlet inner ring Event
 		for (int i = iNumEjection; i < iNumEjection + iNumMoonlet/2; i++){
 			SceneObject particle = new SceneObject();
 			particle.setMesh("particle");
-			particle.setMaterial("ParticleMaterial");
+			particle.setMaterial("MoonMaterial");
 			
 			//particle.v3_speed.set((float)(Math.random()-0.5)*2, (float)(Math.random()-0.5)/5, (float)(Math.random()-0.5)*2);
 			
@@ -208,7 +208,7 @@ public class Scene {
 		for (int i = iNumEjection + iNumMoonlet/2; i < iNumEjection + iNumMoonlet; i++){
 			SceneObject particle = new SceneObject();
 			particle.setMesh("particle");
-			particle.setMaterial("ParticleMaterial");
+			particle.setMaterial("MoonMaterial");
 			
 			//particle.v3_speed.set((float)(Math.random()-0.5)*2, (float)(Math.random()-0.5)/5, (float)(Math.random()-0.5)*2);
 			
@@ -245,10 +245,12 @@ public class Scene {
 		
 		// Comet Event
 		for (int i = 1; i <= ViewScreen.iNumComets; i++){
-			SceneObject comet = new SceneObject();
-			comet.setMesh("Sphere");
-			comet.setMaterial("CometMaterial");
-			addObjectWithTransform(new NameBindSceneObject("comet_"+i, comet), Matrix4.createTranslation(new Vector3(999, 999, 999)));
+			for (int j = 0; j < ViewScreen.iCometLength; j++){
+				SceneObject comet = new SceneObject();
+				comet.setMesh("Sphere");
+				comet.setMaterial("CometMaterial");
+				addObjectWithTransform(new NameBindSceneObject("comet_"+i+"_"+j, comet), Matrix4.createTranslation(new Vector3(999, 999, 999)));
+			}
 		}
 		
 		
@@ -271,8 +273,43 @@ public class Scene {
 			addObject(new NameBindSceneObject("debris_"+i, debris) );
 		}
 		
-
-		
+		// Solar panels:
+		Matrix4 s1 = new Matrix4(0.483f,0f,0f,2.263f,0f,0f,-0.233f,-0.06f,0f,1f,0f,0.504f,0f,0f,0f,1f);
+		Matrix4 s2 = new Matrix4(0.22f,0f,-0.242f,1.179f,-0.128f,0f,-0.417f,1.996f,0f,1f,0f,0.502f,0f,0f,0f,1f);
+		Matrix4 s3 = new Matrix4(0.226f,0f,0.223f,-1.12f,0.129f,0f,-0.388f,2.004f,0f,1f,0f,0.515f,0,0,0,1f);
+		Matrix4 s4 = new Matrix4(0.383f,0f,0f,-2.357f,0f,0f,-0.219f,0.035f,0f,1f,0f,0.486f,0f,0f,0f,1f);
+		Matrix4 s5 = new Matrix4(0.207f,0f,-0.228f,-1.17f,-0.118f,0f,-0.4f,-1.957f,0f,1f,0f,0.511f,0f,0f,0f,1f);
+		Matrix4 s6 = new Matrix4(0.189f,0f,0.225f,1.105f,0.1f,0f,-0.424f,-2.018f,0f,1f,0f,0.505f,0f,0f,0f,1f);
+		SceneObject solarPanel1 = new SceneObject();
+		solarPanel1.setMesh("Plane");
+		solarPanel1.setMaterial("Mirror");
+		solarPanel1.setParent("Endurance_object");
+		SceneObject solarPanel2 = new SceneObject();
+		solarPanel2.setMesh("Plane");
+		solarPanel2.setMaterial("Mirror");
+		solarPanel2.setParent("Endurance_object");
+		SceneObject solarPanel3 = new SceneObject();
+		solarPanel3.setMesh("Plane");
+		solarPanel3.setMaterial("Mirror");
+		solarPanel3.setParent("Endurance_object");
+		SceneObject solarPanel4 = new SceneObject();
+		solarPanel4.setMesh("Plane");
+		solarPanel4.setMaterial("Mirror");
+		solarPanel4.setParent("Endurance_object");
+		SceneObject solarPanel5 = new SceneObject();
+		solarPanel5.setMesh("Plane");
+		solarPanel5.setMaterial("Mirror");
+		solarPanel5.setParent("Endurance_object");
+		SceneObject solarPanel6 = new SceneObject();
+		solarPanel6.setMesh("Plane");
+		solarPanel6.setMaterial("Mirror");
+		solarPanel6.setParent("Endurance_object");
+		addObjectWithTransform(new NameBindSceneObject("solarPanel1", solarPanel1), s1);
+		addObjectWithTransform(new NameBindSceneObject("solarPanel2", solarPanel2), s2);
+		addObjectWithTransform(new NameBindSceneObject("solarPanel3", solarPanel3), s3);
+		addObjectWithTransform(new NameBindSceneObject("solarPanel4", solarPanel4), s4);
+		addObjectWithTransform(new NameBindSceneObject("solarPanel5", solarPanel5), s5);
+		addObjectWithTransform(new NameBindSceneObject("solarPanel6", solarPanel6), s6);
 	}
 
 	public void addListener(SceneEventQueue q){
