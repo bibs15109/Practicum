@@ -167,7 +167,7 @@ public class Scene {
 		for (int i = iNumEjection; i < iNumEjection + iNumMoonlet/2; i++){
 			SceneObject particle = new SceneObject();
 			particle.setMesh("particle");
-			particle.setMaterial("MoonMaterial");
+			particle.setMaterial("ParticleMaterial");
 			
 			//particle.v3_speed.set((float)(Math.random()-0.5)*2, (float)(Math.random()-0.5)/5, (float)(Math.random()-0.5)*2);
 			
@@ -208,7 +208,7 @@ public class Scene {
 		for (int i = iNumEjection + iNumMoonlet/2; i < iNumEjection + iNumMoonlet; i++){
 			SceneObject particle = new SceneObject();
 			particle.setMesh("particle");
-			particle.setMaterial("MoonMaterial");
+			particle.setMaterial("ParticleMaterial");
 			
 			//particle.v3_speed.set((float)(Math.random()-0.5)*2, (float)(Math.random()-0.5)/5, (float)(Math.random()-0.5)*2);
 			
@@ -269,7 +269,7 @@ public class Scene {
 		for (int i = 0; i < iNumDebris; i++){
 			SceneObject debris = new SceneObject();
 			debris.setMesh("particle");
-			debris.setMaterial("MoonMaterial");
+			debris.setMaterial("ParticleMaterial");
 			addObject(new NameBindSceneObject("debris_"+i, debris) );
 		}
 		

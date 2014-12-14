@@ -50,19 +50,27 @@ public class MeshGenParticle extends MeshGenerator {
 			outData.positions.put(0.7071f*fSize);
 			outData.uvs.put(0);
 			outData.uvs.put(1);
-			/*
-			outData.normals.put(i);
-			outData.normals.put(i);
-			outData.normals.put(i);
+		
+			//1
+			outData.normals.put(.335f);
+			outData.normals.put(0);
+			outData.normals.put(-.942f);
 			
-			outData.normals.put(i);
-			outData.normals.put(i);
-			outData.normals.put(i);
+			//2
+			outData.normals.put(-.335f);
+			outData.normals.put(0);
+			outData.normals.put(-.942f);
 			
-			outData.normals.put(i);
-			outData.normals.put(i);
-			outData.normals.put(i);
-			*/
+			//3
+			outData.normals.put(0);
+			outData.normals.put(.335f);
+			outData.normals.put(.942f);
+			
+			//4
+			outData.normals.put(0);
+			outData.normals.put(-.335f);
+			outData.normals.put(.942f);
+			
 			
 			outData.indices.put(i * 3);
 			outData.indices.put(i * 3 + 3);
