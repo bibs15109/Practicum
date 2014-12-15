@@ -514,12 +514,16 @@ public class ViewScreen extends GameScreen {
 		}
 	}
 	
+	float t = 1;
 	private void shakeCamera(RenderCamera c) {		
-		float cos1 = (float)(Math.random() - .5);
-		float cos2 = (float)(Math.random() - .5);
-		float cos3 = (float)(Math.random() - .5);
-		Matrix4 trans = Matrix4.createTranslation(new Vector3(cos1, cos2, cos3));
-		c.sceneCamera.transformation.mulAfter(trans);
+		if (t > 0) {
+			float cos1 = (float)(Math.random() - .5) * t;
+			float cos2 = (float)(Math.random() - .5) * t;
+			float cos3 = (float)(Math.random() - .5) * t;
+			Matrix4 trans = Matrix4.createTranslation(new Vector3(cos1, cos2, cos3));
+			c.sceneCamera.transformation.mulAfter(trans);
+			t-=.0001;
+		}
 	}
 	
 	@Override

@@ -79,7 +79,7 @@ public class CameraController {
 		if (Scene.bBegin){
 			
 			//Vector3 endurance_Speed = new Vector3(soEndurance.v3_speed);
-			if (!(soEndurance.transformation.getTrans().len() < 2.5)){
+			if (!(soEndurance.transformation.getTrans().len() < ParticleMoonletEvent.fStarRadius)){
 				soEndurance.addTranslation(soEndurance.v3_speed.clone().mul((float)et*fEndurSpeedCoeff));
 				endur_exterior_cam_trans.mulAfter(Matrix4.createTranslation((soEndurance.v3_speed.clone().mul((float)et*fEndurSpeedCoeff))));
 			}

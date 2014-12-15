@@ -59,14 +59,14 @@ void main() {
         //	  finalColor += vec4(lightIntensity[i], 0.0) * (Idiff + Ispec) / (r*r) + vec4(ambientLightIntensity, 0.0) * Iamb;
         finalColor += vec4(lightIntensity[i], 0.0) * (Idiff + Ispec) / (r*r) + vec4(.1, .1, .1, 0.0) * Iamb;
     }
-
-    float x = worldPos.x + radius - 1;
-    float y = worldPos.y + radius - 1;
-    float z = worldPos.z + radius - 1;
-
     
-    float theta = acos(z / length(worldPos + radius - 1));
-    float phi = atan(y, x);
+    float x = worldPos.x;
+    float y = worldPos.y;
+    float z = worldPos.z;
+    
+    
+    float theta = acos(y / length(worldPos.xyz));
+    float phi = atan(z, x);
     
     //    blue = (abs(sin(phi + .5) * cos(theta)) + .5) / 2;
     
@@ -90,24 +90,26 @@ void main() {
     
     
     float c = 2;
-    float gauss2 = abs(cos(phi + 2 * theta + vTime * 0.6 * c)+ cos(2*x+vTime*0.4 * c));
-    float gauss3= abs(cos((1 * phi + 1 + 3.1 * theta) - vTime * 0.1 * c)+ cos(y+vTime*0.4 * c));
-    float gauss4= abs(cos((2 * phi + 2 + 3.1 *theta) + vTime * 0.78 * c)+ cos(4*x+vTime*0.3 * c));
-    float gauss5= abs(cos((2 * phi + 3 + 6.2 * theta) + vTime * 0.12 * c)+ cos(3*z+vTime*0.1 * c));
-    float gauss6= abs(cos((1 * phi + 4 + 1.9 * theta) - vTime * 0.3 * c)+ cos(4*x+vTime*0.2 * c));
+    
+    float radi = length(worldPos.xyz);
+    float gauss2 = abs(cos(phi + 2 * theta + vTime * 0.6 * c)+ cos(2*x/radi+vTime*0.4 * c));
+    float gauss3= abs(cos((1 * phi + 1 + 3.1 * theta) - vTime * 0.1 * c)+ cos(y/radi+vTime*0.4 * c));
+    float gauss4= abs(cos((2 * phi + 2 + 3.1 *theta) + vTime * 0.78 * c)+ cos(4*x/radi+vTime*0.3 * c));
+    float gauss5= abs(cos((2 * phi + 3 + 6.2 * theta) + vTime * 0.12 * c)+ cos(3*z/radi+vTime*0.1 * c));
+    float gauss6= abs(cos((1 * phi + 4 + 1.9 * theta) - vTime * 0.3 * c)+ cos(4*x/radi+vTime*0.2 * c));
     float tGauss1 = (gauss2 + gauss3 + gauss4 + gauss5 + gauss6) / 5;
     
     
-    float gauss7 = abs(cos(theta + 2 * phi + 0.1*vTime * c) + + cos(3*y+vTime*0.5 * c));
-    float gauss8= abs(cos((4 * theta + 1 + 4* phi) + vTime * 0.11 * c) + + cos(2*x+vTime*0.5 * c));
-    float gauss9= abs(cos((5.4 * theta - 2 + 3 * phi) + vTime * 0.32 * c) + cos(4*y+vTime*0.5 * c));
-    float gauss10= abs(cos((9.3 * theta + 3 + phi) - vTime * 0.28 * c)+ cos(4*y+vTime*0.3 * c));
-    float gauss11= abs(cos((7.9 * theta + 4 + 5*phi) - vTime * 0.13 * c)+ cos(5*z+vTime*0.1 * c));
+    float gauss7 = abs(cos(theta + 2 * phi + 0.1*vTime * c) + + cos(3*y/radi+vTime*0.5 * c));
+    float gauss8= abs(cos((4 * theta + 1 + 4* phi) + vTime * 0.11 * c) + + cos(2*x/radi+vTime*0.5 * c));
+    float gauss9= abs(cos((5.4 * theta - 2 + 3 * phi) + vTime * 0.32 * c) + cos(4*y/radi+vTime*0.5 * c));
+    float gauss10= abs(cos((9.3 * theta + 3 + phi) - vTime * 0.28 * c)+ cos(4*y/radi+vTime*0.3 * c));
+    float gauss11= abs(cos((7.9 * theta + 4 + 5*phi) - vTime * 0.13 * c)+ cos(5*z/radi+vTime*0.1 * c));
     float tGauss2 = (gauss7 + gauss8 + gauss9 + gauss10 + gauss11) /5;
     
     float finalGauss = tGauss2 * tGauss1;
     vec4 modifier = vec4(1 * pow((1/(starMass/3)),10), finalGauss/20, 0.0001 * pow((starMass/3),12),  0);
-
+    
     
     gl_FragColor = (finalColor * .5 + modifier * 30)* exposure;
 }
