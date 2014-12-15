@@ -144,16 +144,16 @@
         </data>
     </material>
 	
-	<material>
-		<name>endurance_material</name>
-		<data>
-			<type>Phong</type>
-			<diffuse>
-				<color>200 200 200 255</color>
-			</diffuse>
-			<shininess>20</shininess>
-		</data>
-	</material>
+	   <material>
+        <name>endurance_material</name>
+        <data>
+            <type>Phong_noAmb</type>
+            <diffuse>
+                <color>255 255 255 255</color>
+            </diffuse>
+            <shininess>50</shininess>
+        </data>
+    </material>
 	
 	<material>
 		<name>Mirror</name>

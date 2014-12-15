@@ -457,6 +457,7 @@ public class ViewScreen extends GameScreen {
 		}
 	}
 	
+	int count = 0;
 	//explosion sequence
 	private void startExplosion(GameTime gameTime) {
 		Vector3d oldI = new Vector3d();
@@ -483,7 +484,16 @@ public class ViewScreen extends GameScreen {
 			}
 			double time = gameTime.total - startTime;
 			if (ParticleMoonletEvent.eaten >= Scene.iNumMoonlet) {
-				explode(gameTime);
+				if (count > 22) explode(gameTime);
+				else {
+					if (time % 3 < 1) {
+						count ++;
+						SceneObject laser = app.scene.objects.get("laser_" + count);
+						laser.addScale(new Vector3(1000,1,1));
+						laser.addRotation(new Vector3((float)(Math.random() * 100 * Math.PI), (float)(Math.random() * 100 * Math.PI), (float)(Math.random() * 100 * Math.PI)));
+					}
+				}
+				
 			}
 			
 		}
@@ -506,25 +516,22 @@ public class ViewScreen extends GameScreen {
 			star.transformation.mulAfter(Matrix4.createScale(.99f));
 			ParticleMoonletEvent.fStarRadius *= .99;
 		}
+		
 		explosion_1.startEvent();
+		
 		if (shake) {
 			for (RenderCamera c : rController.env.cameras) {
 				shakeCamera(c);
 			}
 		}
-//		ao.reset("Star");
-//		ao.wobbleRadius("Star", t / 30);
-//		t += (Math.random()/2 + .5) * 1;
 	}
 	
-	private float t = 0;
 	private void shakeCamera(RenderCamera c) {		
 		float cos1 = (float)(Math.random() - .5);
 		float cos2 = (float)(Math.random() - .5);
 		float cos3 = (float)(Math.random() - .5);
 		Matrix4 trans = Matrix4.createTranslation(new Vector3(cos1, cos2, cos3));
 		c.sceneCamera.transformation.mulAfter(trans);
-		t += .1f;
 	}
 	
 	@Override

@@ -159,14 +159,6 @@ public class Scene {
 		// Jason Zhao: maybe can move this to ViewScreen.build();
 		
 		
-		// Particle Ejection Event
-		for (int i = 0; i < iNumEjection; i++){
-			SceneObject particle = new SceneObject();
-			particle.setMesh("particle");
-			particle.setMaterial("Generic");
-//			addObject(new NameBindSceneObject("particle_"+i, particle) );
-		}
-		
 		// ParticleMoonlet inner ring Event
 		for (int i = iNumEjection; i < iNumEjection + iNumMoonlet/2; i++){
 			SceneObject particle = new SceneObject();
@@ -246,8 +238,6 @@ public class Scene {
 		
 		
 		
-		
-		
 		// Comet Event
 		for (int i = 1; i <= ViewScreen.iNumComets; i++){
 			for (int j = 0; j < ViewScreen.iCometLength; j++){
@@ -256,6 +246,16 @@ public class Scene {
 				comet.setMaterial("CometMaterial");
 				addObjectWithTransform(new NameBindSceneObject("comet_"+i+"_"+j, comet), Matrix4.createTranslation(new Vector3(999, 999, 999)));
 			}
+		}
+		
+		for (int i = 1; i < 25; i ++) {
+			SceneObject laser = new SceneObject();
+			laser.setMesh("Sphere");
+			laser.setMaterial("NoiseMaterial");
+			Matrix4 scale = Matrix4.createScale(.05f, .05f, .05f);
+			
+//			Matrix4 M = rotX.clone().mulAfter(rotY).mulAfter(rotZ).mulAfter(scale);
+			addObjectWithTransform(new NameBindSceneObject("laser_" + i, laser), scale);
 		}
 		
 		
