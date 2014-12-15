@@ -76,6 +76,9 @@ public class Renderer implements IDisposable {
 	public void draw(RenderCamera camera, ArrayList<RenderLight> lights, GameTime gameTime) {
 		DepthState.DEFAULT.set();
 		BlendState.OPAQUE.set();
+		//DepthState.NONE.set();
+		//BlendState.ALPHA_BLEND.set();
+		
 		RasterizerState.CULL_CLOCKWISE.set();
 		
 		// Draw Up To 16 Lights

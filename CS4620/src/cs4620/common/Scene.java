@@ -48,9 +48,15 @@ public class Scene {
 	public static final HashSet<String> DEFAULT_TEXTURES = new HashSet<>(Arrays.asList("Checker Board", "UV"));
 
 	// Jason Zhao:
-	public static boolean bBegin = false;
-	public static boolean bExterior_cam_active = false;
-	public static boolean bFlightControl = false;
+	public static boolean   bBegin = false,
+							startExplosion = false,
+							bExterior_cam_active = false,
+							bFlightControl = false,
+							bFollow_cam_active = false;
+	
+	public static double starRadius = 2;
+	
+	public static int iNumEjection = 500, iNumMoonlet = 2000;
 	
 	/**
 	 * Container Of Unique Meshes
@@ -153,14 +159,14 @@ public class Scene {
 		addMesh(new NameBindMesh("particle", m));
 		
 		// Jason Zhao: maybe can move this to ViewScreen.build();
-		int iNumEjection = 500, iNumMoonlet = 2000;
+		
 		
 		// Particle Ejection Event
 		for (int i = 0; i < iNumEjection; i++){
 			SceneObject particle = new SceneObject();
 			particle.setMesh("particle");
 			particle.setMaterial("Generic");
-			//addObject(new NameBindSceneObject("particle_"+i, particle) );
+//			addObject(new NameBindSceneObject("particle_"+i, particle) );
 		}
 		
 		// ParticleMoonlet inner ring Event
@@ -237,6 +243,7 @@ public class Scene {
 			//particle.v3_speed.set(0);
 			
 			addObjectWithTransform(new NameBindSceneObject("particle_"+i, particle), M);
+			//
 		}
 		
 		
@@ -259,11 +266,11 @@ public class Scene {
 		int iNumDebris = 400;
 		SceneObject deepimpact = new SceneObject();
 		deepimpact.setMesh("Sphere");
-		deepimpact.setMaterial("Generic");
+		deepimpact.setMaterial("MoonMaterial");
 		addObjectWithTransform(new NameBindSceneObject("comet_2", deepimpact), Matrix4.createTranslation(new Vector3(999, 999, 999)));
 		deepimpact = new SceneObject();
 		deepimpact.setMesh("Sphere");
-		deepimpact.setMaterial("Generic");
+		deepimpact.setMaterial("MoonMaterial");
 		addObjectWithTransform(new NameBindSceneObject("comet_3", deepimpact), Matrix4.createTranslation(new Vector3(999, 999, 999)));
 		// Ejection for deep impact:
 		for (int i = 0; i < iNumDebris; i++){
@@ -274,12 +281,12 @@ public class Scene {
 		}
 		
 		// Solar panels:
-		Matrix4 s1 = new Matrix4(0.483f,0f,0f,2.263f,0f,0f,-0.233f,-0.06f,0f,1f,0f,0.504f,0f,0f,0f,1f);
-		Matrix4 s2 = new Matrix4(0.22f,0f,-0.242f,1.179f,-0.128f,0f,-0.417f,1.996f,0f,1f,0f,0.502f,0f,0f,0f,1f);
-		Matrix4 s3 = new Matrix4(0.226f,0f,0.223f,-1.12f,0.129f,0f,-0.388f,2.004f,0f,1f,0f,0.515f,0,0,0,1f);
-		Matrix4 s4 = new Matrix4(0.383f,0f,0f,-2.357f,0f,0f,-0.219f,0.035f,0f,1f,0f,0.486f,0f,0f,0f,1f);
-		Matrix4 s5 = new Matrix4(0.207f,0f,-0.228f,-1.17f,-0.118f,0f,-0.4f,-1.957f,0f,1f,0f,0.511f,0f,0f,0f,1f);
-		Matrix4 s6 = new Matrix4(0.189f,0f,0.225f,1.105f,0.1f,0f,-0.424f,-2.018f,0f,1f,0f,0.505f,0f,0f,0f,1f);
+		Matrix4 s1 = new Matrix4(0.483f,0f,0f,2.263f,0f,0f,-0.233f,-0.06f,0f,1f,0f,0.49f,0f,0f,0f,1f);
+		Matrix4 s2 = new Matrix4(0.22f,0f,-0.242f,1.179f,-0.128f,0f,-0.417f,1.996f,0f,1f,0f,0.49f,0f,0f,0f,1f);
+		Matrix4 s3 = new Matrix4(0.226f,0f,0.223f,-1.12f,0.129f,0f,-0.388f,2.004f,0f,1f,0f,0.49f,0,0,0,1f);
+		Matrix4 s4 = new Matrix4(0.383f,0f,0f,-2.357f,0f,0f,-0.219f,0.035f,0f,1f,0f,0.49f,0f,0f,0f,1f);
+		Matrix4 s5 = new Matrix4(0.207f,0f,-0.228f,-1.17f,-0.118f,0f,-0.4f,-1.957f,0f,1f,0f,0.513f,0f,0f,0f,1f);
+		Matrix4 s6 = new Matrix4(0.202f,0f,0.232f,1.143f,0.114f,0f,-0.409f,-2.017f,0f,1f,0f,0.49f,0f,0f,0f,1f);
 		SceneObject solarPanel1 = new SceneObject();
 		solarPanel1.setMesh("Plane");
 		solarPanel1.setMaterial("Mirror");

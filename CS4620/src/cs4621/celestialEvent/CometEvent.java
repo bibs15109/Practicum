@@ -42,7 +42,7 @@ public class CometEvent extends CelestialEvent {
 		// now assume that there is only 1 star in the center:
 		if (bHappening){
 			float et = (float)gameTime.elapsed;
-			if (soComet[0].transformation.getTrans().len() > 300){
+			if (soComet[0].transformation.getTrans().len() > 100){
 				bHappening = false;
 				soComet[0].transformation.setIdentity();
 				for(int i = 0; i < length-1; i++){
@@ -59,7 +59,7 @@ public class CometEvent extends CelestialEvent {
 			for(int i = 0; i < length; i++){
 				oldTrans[i].set(soComet[i].transformation);
 				soComet[i].transformation.mulBefore(Matrix4.createScale((((float) length-i)*((float) length-i))/(length * length)));
-				soComet[i].cometColor.set(((float)length - 1 -i)/(length - 1),((float)length - 1 -i)/(length - 1),1f);
+				//soComet[i].cometColor.set(((float)length - 1 -i)/(length - 1),((float)length - 1 -i)/(length - 1),1f);
 			}
 			
 			
@@ -73,7 +73,7 @@ public class CometEvent extends CelestialEvent {
 					soComet[i] = app.scene.objects.get("comet_"+iObjIndex+"_"+i);
 				}
 				//soComet[0].cometColor.set(new Vector3((float)Math.random(), (float)Math.random(), (float)Math.random()));
-				soComet[0].cometColor.set(1f,1f,1f);
+				soComet[0].cometColor.set((float)Math.random()+0.5f, (float)Math.random()+0.5f, (float)Math.random()+0.5f);
 				target.set((float)(Math.random()*10+3), (float)(Math.random()*10+3), (float)(Math.random()*10+3));
 				
 				// generate a random sign
@@ -87,7 +87,7 @@ public class CometEvent extends CelestialEvent {
 				float fScaleFactor = (float)(Math.random()/20+0.07);
 				soComet[0].transformation.set(Matrix4.createScale(fScaleFactor));// scale the size of the Comet
 				
-				float fDistanceFactor = 50;
+				float fDistanceFactor = 40;
 				soComet[0].transformation.mulBefore(Matrix4.createTranslation
 									((float)(Math.random()*fDistanceFactor+fDistanceFactor)*(fSignX)/fScaleFactor, 
 									(float)(Math.random()*fDistanceFactor+fDistanceFactor)*(fSignY)/fScaleFactor, 
@@ -97,6 +97,7 @@ public class CometEvent extends CelestialEvent {
 				dStartTime = gameTime.total;
 				for(int i = 1; i < length; i++){
 					soComet[i].cometColor.set(soComet[0].cometColor);
+					soComet[i].cometColor.mul(1-i/length);
 					soComet[i].transformation.set(soComet[0].transformation);
 				}
 				for(int i = 0; i < length; i++){

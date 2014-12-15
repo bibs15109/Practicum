@@ -94,6 +94,7 @@ public class DeepImpactEvent extends CelestialEvent {
 				float fRand = (float)Math.random();
 				for (int i = iDebrisStart; i <= iDebrisEnd; i++){
 					SceneObject sco = app.scene.objects.get("debris_"+i);
+					sco.addRotation(new Vector3((float)Math.random()*100f, (float)Math.random()*100f, (float)Math.random()*100f));
 					sco.addTranslation(v3_loc);
 					
 					Vector3 v3_perp1 = new Vector3(-v3_loc.y, v3_loc.x, 0);
@@ -115,6 +116,7 @@ public class DeepImpactEvent extends CelestialEvent {
 					fRand = (float)Math.random();
 					sco.v3_speed.set(v3_speed.x+v3_perp.x, v3_speed.y+v3_perp.y, v3_speed.z+v3_perp.z);
 					sco.v3_speed.mul(fRand+0.1f);
+					
 					
 				}
 				

@@ -20,5 +20,4 @@ public abstract class CelestialEvent {
 	
 	public abstract void trigger(SceneApp app, GameTime gameTime);
 		
-	
 }

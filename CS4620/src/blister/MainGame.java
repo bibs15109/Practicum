@@ -157,7 +157,7 @@ public abstract class MainGame implements IDisposable {
 	 */
 	private void createDisplay() {
 		try{
-			//Display.setFullscreen(true);
+//			Display.setFullscreen(true);
 			Display.setDisplayMode(new DisplayMode(eWR.width, eWR.height));
 			org.lwjgl.opengl.PixelFormat pf = new PixelFormat(8, 24, 8);
 			ContextAttribs ca = new ContextAttribs(2, 1);

@@ -50,7 +50,8 @@ public class ViewScreen extends GameScreen {
 	boolean showGrid = false;
 	
 	SceneApp app;
-	boolean bBegin = false;
+	boolean bBegin = false,
+			startExplosion = false;
 	// Jason: event handler:
 	public CelestialEventHandler celestialEventHandler;
 	public float bCentralStarSize = 2;
@@ -69,6 +70,10 @@ public class ViewScreen extends GameScreen {
 	
 	//public boolean bExterior_cam_active = false;
 	public boolean bSwitched = false; // if the camera has been switched back;
+	public static boolean bLaserOn = false;
+	private static boolean explode = true,
+							changeRadius = true;
+	private static double startTime;
 	//public boolean bFlightControl = false;
 	// End Jason
 	
@@ -85,6 +90,12 @@ public class ViewScreen extends GameScreen {
 	CameraController camController;
 	ManipController manipController;
 	GridRenderer gridRenderer;
+	
+	ParticleMoonletEvent moonlet_1;
+	DeepImpactEvent impact_1;
+	DeepImpactEvent impact_2;
+	ExplosionEvent explosion_1;
+	
 	
 	@Override
 	public int getNext() {
@@ -123,7 +134,7 @@ public class ViewScreen extends GameScreen {
 		//this.celestialEventHandler.addEvent(ejection_3);
 		//ejection_3.startEvent();
 		
-		ParticleMoonletEvent moonlet_1 = new ParticleMoonletEvent(500, 2499, 2);
+		moonlet_1 = new ParticleMoonletEvent(500, 2499, 2);
 		this.celestialEventHandler.addEvent(moonlet_1);
 		moonlet_1.startEvent();
 		
@@ -133,13 +144,16 @@ public class ViewScreen extends GameScreen {
 			comet.startEvent();
 		}
 		
-		DeepImpactEvent impact_1 = new DeepImpactEvent(2, 0, 199, 2);
+		impact_1 = new DeepImpactEvent(2, 0, 199, 2);
 		this.celestialEventHandler.addEvent(impact_1);
 		impact_1.startEvent();
 		
-		DeepImpactEvent impact_2 = new DeepImpactEvent(3, 200, 399, 2);
+		impact_2 = new DeepImpactEvent(3, 200, 399, 2);
 		this.celestialEventHandler.addEvent(impact_2);
 		impact_2.startEvent();
+		
+		explosion_1 = new ExplosionEvent(Scene.iNumEjection, Scene.iNumEjection + Scene.iNumMoonlet);
+		this.celestialEventHandler.addEvent(explosion_1);
 		
 		//EnduranceVoyageEvent endurance = new EnduranceVoyageEvent();
 		//this.celestialEventHandler.addEvent(endurance);
@@ -165,6 +179,7 @@ public class ViewScreen extends GameScreen {
 			switch (args.key) {
 			///////////////////
 			case Keyboard.KEY_T:
+				/*
 				try {
 					ao = new AnimationObject(app.scene);
 					so = app.scene.objects.get("Star");
@@ -173,6 +188,15 @@ public class ViewScreen extends GameScreen {
 				else ao.changeTexture("Star", "NoiseMaterial");
 				app.scene.sendEvent(new SceneObjectResourceEvent(so, SceneObjectResourceEvent.Type.Material));
 				starTexture = !starTexture;
+				*/
+				// Toggle Red_laser:
+				if (bLaserOn){
+					app.scene.objects.get("Endurance_laser").addScale(new Vector3(1,1,0.0001f));
+				} else {
+					app.scene.objects.get("Endurance_laser").addScale(new Vector3(1,1,10000f));
+				}
+				bLaserOn = !bLaserOn;
+				
 				break;
 			///////////////////
 			case Keyboard.KEY_M:
@@ -183,7 +207,17 @@ public class ViewScreen extends GameScreen {
 				}
 				break;
 			case Keyboard.KEY_G:
-				showGrid = !showGrid;
+				try {
+					ao = new AnimationObject(app.scene);
+					so = app.scene.objects.get("Star");
+				} catch (Exception e){}
+				if (starTexture) {
+					ao.changeTexture("Star", "Mirror");
+				}else {
+					ao.changeTexture("Star", "NoiseMaterial");
+				}
+				app.scene.sendEvent(new SceneObjectResourceEvent(so, SceneObjectResourceEvent.Type.Material));
+				starTexture = !starTexture;
 				break;
 			case Keyboard.KEY_F3:
 				FileDialog fd = new FileDialog(app.otherWindow);
@@ -213,10 +247,17 @@ public class ViewScreen extends GameScreen {
 				bBegin = !bBegin;
 				Scene.bBegin = bBegin;
 				break;
-			case Keyboard.KEY_ADD:
+			case Keyboard.KEY_F7:
+				startExplosion = true;
+				Scene.startExplosion = true;
+//				impact_1.stopEvent();
+//				impact_2.stopEvent();
+				
+				break;
+			case Keyboard.KEY_ADD: case Keyboard.KEY_RBRACKET:
 				ParticleMoonletEvent.GConstant *= 1.02;
 				break;
-			case Keyboard.KEY_MINUS:
+			case Keyboard.KEY_MINUS: case Keyboard.KEY_LBRACKET:
 				ParticleMoonletEvent.GConstant /= 1.02;
 				break;
 				
@@ -243,7 +284,16 @@ public class ViewScreen extends GameScreen {
 				} else if (camIndex == 2){
 					//endurance_exterior_cam.set(camController.camera.sceneCamera.transformation);
 					Scene.bExterior_cam_active = false;
+					Scene.bFollow_cam_active = true;
 					//endurance_exterior_cam.set(camController.camera.sceneObject.transformation.mulBefore(camController.rEnv.findObject(app.scene.objects.get("Endurance_parent_object")).mWorldTransform.clone().invert()));
+					
+					
+					
+					
+					camIndex = 3;
+				} else if (camIndex == 3){
+					Scene.bFollow_cam_active = false;
+					
 					camController.camera.sceneObject.transformation.set(primary_cam);
 					camIndex = 1;
 				}
@@ -309,10 +359,14 @@ public class ViewScreen extends GameScreen {
 		
 		// Jason Zhao: the event handler that updates all the Celestial Events:
 		if (bBegin){
+			
+			
 			this.celestialEventHandler.update(app, gameTime);
 			app.scene.objects.get("Endurance_object").transformation.mulBefore(Matrix4.createRotationZ((float)(gameTime.elapsed)));
+			app.scene.objects.get("Star").transformation.mulBefore(Matrix4.createRotationY((float)(-gameTime.elapsed)/2));
 			// Endurance red light blinking:
 			//System.out.println(gameTime.total % 10);
+			
 			
 			if (rl == null){
 				for (RenderLight light : rController.env.lights){
@@ -362,13 +416,19 @@ public class ViewScreen extends GameScreen {
 			eng3.sceneLight.setIntensity(engIntensity.clone().mul(zThrottle*zThrottle/10000));
 			eng4.sceneLight.setIntensity(engIntensity.clone().mul(zThrottle*zThrottle/10000));
 			
-			app.scene.objects.get("Endurance_engine1_parent").transformation.m[10] = zThrottle/-20+0.01f;
-			app.scene.objects.get("Endurance_engine2_parent").transformation.m[10] = zThrottle/-20+0.01f;
-			app.scene.objects.get("Endurance_engine3_parent").transformation.m[10] = zThrottle/-20+0.01f;
-			app.scene.objects.get("Endurance_engine4_parent").transformation.m[10] = zThrottle/-20+0.01f;
+			app.scene.objects.get("Endurance_engine1_parent").transformation.m[10] = zThrottle/-15+0.01f;
+			app.scene.objects.get("Endurance_engine2_parent").transformation.m[10] = zThrottle/-15+0.01f;
+			app.scene.objects.get("Endurance_engine3_parent").transformation.m[10] = zThrottle/-15+0.01f;
+			app.scene.objects.get("Endurance_engine4_parent").transformation.m[10] = zThrottle/-15+0.01f;
 			
 			//((Matrix4.createScale(1, 1, 50)));
 			
+		} // end begin
+		
+		
+		// start explosion sequence
+		if (startExplosion) {
+			startExplosion(gameTime);
 		}
 		//app.scene.objects.get("meteror_"+iObjIndex).;
 
@@ -400,6 +460,54 @@ public class ViewScreen extends GameScreen {
 		if(rController.isNewSceneRequested()) {
 			setState(ScreenState.ChangeNext);
 		}
+	}
+	
+	//explosion sequence
+	private void startExplosion(GameTime gameTime) {
+		Vector3d oldI = new Vector3d();
+		double coeff = gameTime.elapsed * 25;
+		if (Scene.starRadius <= 6 && changeRadius) {
+			ParticleMoonletEvent.GConstant *= (1 + Scene.starRadius/2500);
+			app.scene.objects.get("Star").transformation.mulAfter(Matrix4.createScale(1.001f));
+			Scene.starRadius *= 1.001;
+			for (RenderLight light : rController.env.lights) {
+				if (light.sceneObject.getID().name.compareTo("Light_1") == 0) {
+					oldI.set(light.sceneLight.intensity);
+					if (oldI.z < 800) {
+						Vector3d newI = new Vector3d (oldI.x - coeff, oldI.y, oldI.z + (coeff * 1.5));
+						light.sceneLight.setIntensity(newI);
+					}	
+				}
+			}
+		} 		
+		else {
+			changeRadius = false;
+			if (explode) {
+				startTime = gameTime.total;
+				explode = false;
+			}
+			double time = gameTime.total - startTime;
+			if (time > 2) {
+				explode(gameTime);
+			}
+			
+		}
+
+	}
+	
+//	private float t =0;
+	private void explode(GameTime gameTime) {
+		try {
+			ao = new AnimationObject(app.scene);
+		} catch(Exception e){}
+		
+		SceneObject star= app.scene.objects.get("Star");
+		moonlet_1.stopEvent();
+		explosion_1.startEvent();
+//		ao.reset("Star");
+//		ao.wobbleRadius("Star", t / 30);
+//		t += (Math.random()/2 + .5) * 1;
+		
 	}
 	
 	@Override

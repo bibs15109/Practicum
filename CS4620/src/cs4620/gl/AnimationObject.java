@@ -40,7 +40,6 @@ public class AnimationObject{
 	
 	public void reset(String name) {
 		SceneObject star = scene.objects.get(name);
-		
 		star.transformation.mulAfter(this.tInverse);
 	}
 	

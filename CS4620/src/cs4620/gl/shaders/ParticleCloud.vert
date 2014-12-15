@@ -10,7 +10,6 @@ uniform mat4 mViewProjection;
 uniform mat4 mWorld;
 uniform mat3 mWorldIT;
 
-uniform float gameTime;
 
 // RenderMesh Input
 attribute vec4 vPosition; // Sem (POSITION 0)

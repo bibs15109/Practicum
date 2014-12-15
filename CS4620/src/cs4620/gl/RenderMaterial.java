@@ -13,6 +13,7 @@ import org.lwjgl.opengl.GL20;
 import blister.GameTime;
 import cs4620.common.Material;
 import cs4620.common.Material.InputProvider.Type;
+import cs4620.common.Scene;
 import cs4620.common.SceneObject;
 import egl.GL;
 import egl.GL.TextureTarget;
@@ -31,6 +32,7 @@ import egl.math.Vector3d;
 import egl.math.Vector4;
 import ext.java.IOUtils;
 import cs4620.common.texture.TexCubeMap;
+import cs4621.celestialEvent.ParticleMoonletEvent;
 
 
 
@@ -110,8 +112,8 @@ public class RenderMaterial implements IDisposable {
 	public final Material sceneMaterial;
 	
 	public int unWorld, unWorldIT, unV, unP, unVP, unLPos, unLIntensity, unLCount, unCubeMap, unWorldCam, 
-		unShininess, unRoughness, unDispMagnitude, unAmbientLIntensity, unExposure, unTime, unVelocity, unGameTime,
-		unCometColor;
+		unShininess, unRoughness, unDispMagnitude, unAmbientLIntensity, unExposure, unTime, unVelocity, unElapsedTime,
+		unCometColor, unMass, unRadius;
 	
 	float periodic_counter = 0,
 		periodic_velocity = 1;
@@ -192,10 +194,10 @@ public class RenderMaterial implements IDisposable {
 		
 		//time
 		unTime = program.getUniform("vTime");
-		unVelocity= program.getUniform("vVelocity");
+		//unElapsedTime = program.getUniform("elapsedTime");
 		
-		// Game Time:
-		unGameTime = program.getUniform("gameTime");
+		unMass = program.getUniform("starMass");
+		unRadius = program.getUniform("radius");
 		
 		// Comet Color:
 		unCometColor = program.getUniform("cometColor");
@@ -341,14 +343,12 @@ public class RenderMaterial implements IDisposable {
 		}
 		
 		/////////  Jason Zhao:
-		periodic_counter+= .01;
-		periodic_velocity += (9.8 * periodic_counter) * .1;
-		if(unTime != GL.BadUniformLocation) GL20.glUniform1f(unTime,  periodic_counter);
-		if(unVelocity != GL.BadUniformLocation) GL20.glUniform1f(unVelocity, periodic_velocity);
-		if(unGameTime != GL.BadUniformLocation) GL20.glUniform1f(unGameTime,  (float)gameTime.total);
+		//periodic_counter+= .01;
+		//periodic_velocity += (9.8 * periodic_counter) * .1;
+		if(unTime != GL.BadUniformLocation) GL20.glUniform1f(unTime,  (float)gameTime.total);
+		if(unMass != GL.BadUniformLocation) GL20.glUniform1f(unMass, ParticleMoonletEvent.GConstant);
+		if(unRadius != GL.BadUniformLocation) GL20.glUniform1f(unRadius, (float) Scene.starRadius / 2f);
 		
-		
-		//System.out.println((float)gameTime.total);
 		
 	}
 }

@@ -30,7 +30,7 @@ void main() {
 	vec3 N = normalize(fN);
 	vec3 V = normalize(worldCam - worldPos.xyz);
 
-	vec4 finalColor = vec4(0.0, 0.0, 0.0, 0.0);
+	vec4 finalColor = vec4(0.0, 0.0, 0.0, 1);
 
 	for (int i = 0; i < numLights; i++) {
 		float r = length(lightPosition[i] - worldPos.xyz);

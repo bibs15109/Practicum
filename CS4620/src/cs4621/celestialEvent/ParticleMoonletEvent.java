@@ -39,7 +39,7 @@ public class ParticleMoonletEvent extends CelestialEvent {
 			if (fDistanceSq < fStarRadius*fStarRadius){
 				sco.transformation.setIdentity();
 				sco.v3_speed.set(0);
-				//System.out.println("Eatten 1! fStarRadius = "+fStarRadius);
+				//System.out.println("Eaten 1! fStarRadius = "+fStarRadius);
 				continue;
 			}
 			v3_accel.normalize();

@@ -30,7 +30,7 @@ public class CameraController {
 	
 	public static float fAccelCoeff = 2000;
 	
-	public static float fEndurAccelCoeff = 0.01f;
+	public static float fEndurSpeedCoeff = 0.01f;
 
 	
 	public CameraController(Scene s, RenderEnvironment re, RenderCamera c) {
@@ -57,6 +57,8 @@ public class CameraController {
 		Vector3 camSpeed = new Vector3(camera.camSpeed);
 		//System.out.println(camSpeed);
 		
+		
+		
 		if (Math.abs(camSpeed.x) < 0.0001){camSpeed.x = 0;}
 		camSpeed.x -= (float)(camSpeed.x * 9.2 * et);
 		if (Math.abs(camSpeed.y) < 0.0001){camSpeed.y = 0;}
@@ -72,15 +74,17 @@ public class CameraController {
 		//System.out.println("-----------------------------------------------");
 		//System.out.println(endur_throttle);
 		
+		
+		
 		if (Scene.bBegin){
 			
 			//Vector3 endurance_Speed = new Vector3(soEndurance.v3_speed);
 			if (!(soEndurance.transformation.getTrans().len() < 2.5)){
-				soEndurance.addTranslation(soEndurance.v3_speed.clone().mul((float)et*fEndurAccelCoeff));
-				endur_exterior_cam_trans.mulAfter(Matrix4.createTranslation((soEndurance.v3_speed.clone().mul((float)et*fEndurAccelCoeff))));
+				soEndurance.addTranslation(soEndurance.v3_speed.clone().mul((float)et*fEndurSpeedCoeff));
+				endur_exterior_cam_trans.mulAfter(Matrix4.createTranslation((soEndurance.v3_speed.clone().mul((float)et*fEndurSpeedCoeff))));
 			}
 			
-
+			
 			Vector3 endur_Accel = new Vector3();
 			Vector3 endur_loc = new Vector3(soEndurance.transformation.getTrans());
 			
@@ -94,7 +98,12 @@ public class CameraController {
 			// endur_Accel.add(endur_loc.mul((float)et));
 			soEndurance.v3_speed.add(endur_Accel.mul((float)et));
 			
-			rEnv.findObject(scene.objects.get("Endurance_parent_object")).mWorldTransform.set(soEndurance.transformation);
+			
+			RenderObject roc = rEnv.findObject(scene.objects.get("Endurance_object"));
+			RenderObject rop = roc.parent;
+			rop.mWorldTransform.set(soEndurance.transformation);
+			
+			roc.mWorldTransform.set(rop.mWorldTransform.clone().mulBefore(roc.sceneObject.transformation));
 		}
 		
 		
@@ -108,23 +117,23 @@ public class CameraController {
 				
 		} else {
 			// viewing mode:
-			if(Keyboard.isKeyDown(Keyboard.KEY_W)) {
+			if(Keyboard.isKeyDown(Keyboard.KEY_W)&& !Scene.bFollow_cam_active) {
 				if(camSpeed.z > 0){camSpeed.set(0,0,0);}else{ 
 				if(camSpeed.z > -60)camSpeed.add(0, 0, Math.max(-60, (float)(fAccelCoeff * et * (camSpeed.z*et/5-0.05f))));}}	
-			if(Keyboard.isKeyDown(Keyboard.KEY_S)) {
+			if(Keyboard.isKeyDown(Keyboard.KEY_S)&& !Scene.bFollow_cam_active) {
 				if(camSpeed.z < 0){camSpeed.set(0,0,0);}else{ 
 				if(camSpeed.z < 60)camSpeed.add(0, 0, Math.min(60, (float)(fAccelCoeff * et * (camSpeed.z*et/5+0.05f))));}}
 		}
-			if(Keyboard.isKeyDown(Keyboard.KEY_A)) {
+			if(Keyboard.isKeyDown(Keyboard.KEY_A)&& !Scene.bFollow_cam_active) {
 				if(camSpeed.x > 0){camSpeed.set(0,0,0);}else{ 
 				if(camSpeed.x > -30)camSpeed.add(Math.max(-30, (float)(fAccelCoeff * et * (camSpeed.x*et/5-0.05f))), 0, 0);}}	
-			if(Keyboard.isKeyDown(Keyboard.KEY_D)) {
+			if(Keyboard.isKeyDown(Keyboard.KEY_D)&& !Scene.bFollow_cam_active) {
 				if(camSpeed.x < 0){camSpeed.set(0,0,0);}else{ 
 				if(camSpeed.x < 30)camSpeed.add(Math.min(30, (float)(fAccelCoeff * et * (camSpeed.x*et/5+0.05f))), 0, 0);}}
-			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+			if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)&& !Scene.bFollow_cam_active) {
 				if(camSpeed.y > 0){camSpeed.set(0,0,0);}else{ 
 				if(camSpeed.y > -30)camSpeed.add(0, Math.max(-30, (float)(fAccelCoeff * et * (camSpeed.y*et/5-0.05f))), 0);}}	
-			if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+			if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)&& !Scene.bFollow_cam_active) {
 				if(camSpeed.y < 0){camSpeed.set(0,0,0);}else{ 
 				if(camSpeed.y < 30)camSpeed.add(0, Math.min(30, (float)(fAccelCoeff * et * (camSpeed.y*et/5+0.05f))), 0);}}
 		
@@ -180,12 +189,12 @@ public class CameraController {
 		
 		// Now rotation:
 		float turnRate_Coeff = 0.03f;
-		if(Keyboard.isKeyDown(Keyboard.KEY_E)) { E_turnRate++;} else {E_turnRate/=1.05;}
-		if(Keyboard.isKeyDown(Keyboard.KEY_Q)) { Q_turnRate++;} else {Q_turnRate/=1.05;} 
-		if(Keyboard.isKeyDown(Keyboard.KEY_UP)) { up_turnRate++;} else {up_turnRate/=1.05;} 
-		if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)) { down_turnRate++;} else {down_turnRate/=1.05;}
-		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) { right_turnRate++;} else {right_turnRate/=1.05;} 
-		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)) { left_turnRate++;} else {left_turnRate/=1.05;}
+		if(Keyboard.isKeyDown(Keyboard.KEY_E)&& !Scene.bFollow_cam_active) { E_turnRate++;} else {E_turnRate/=1.05;}
+		if(Keyboard.isKeyDown(Keyboard.KEY_Q)&& !Scene.bFollow_cam_active) { Q_turnRate++;} else {Q_turnRate/=1.05;} 
+		if(Keyboard.isKeyDown(Keyboard.KEY_UP)&& !Scene.bFollow_cam_active) { up_turnRate++;} else {up_turnRate/=1.05;} 
+		if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)&& !Scene.bFollow_cam_active) { down_turnRate++;} else {down_turnRate/=1.05;}
+		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)&& !Scene.bFollow_cam_active) { right_turnRate++;} else {right_turnRate/=1.05;} 
+		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)&& !Scene.bFollow_cam_active) { left_turnRate++;} else {left_turnRate/=1.05;}
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_O)) { orbitMode = true; } 
 		if(Keyboard.isKeyDown(Keyboard.KEY_F)) { orbitMode = false; } 		
@@ -220,7 +229,17 @@ public class CameraController {
 		//endur_exterior_cam_trans.mulAfter(soEndurance.transformation);
 		if (bExterior_cam_active){camera.sceneObject.transformation.set(endur_exterior_cam_trans);}
 		
-		
+		if (Scene.bFollow_cam_active){
+			RenderObject ro = rEnv.findObject(scene.objects.get("Endurance_exterior_cam"));
+			
+			ro = rEnv.findObject(scene.objects.get("Endurance_exterior_cam"));
+			ro.mWorldTransform.set(ro.sceneObject.transformation).mulAfter(ro.parent.mWorldTransform);
+			ro.mWorldTransformIT.set(ro.mWorldTransform.getAxes()).invert().transpose();
+			
+			camera.sceneObject.transformation.set(ro.mWorldTransform);
+			camera.sceneObject.transformation.mulBefore(Matrix4.createScale(200));
+			camera.mWorldTransform.set(camera.sceneObject.transformation);
+		}
 		
 		
 		
