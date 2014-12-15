@@ -207,18 +207,6 @@ public class ViewScreen extends GameScreen {
 					dataMaterial.addBasic();
 				}
 				break;
-			case Keyboard.KEY_G:
-				try {
-					ao = new AnimationObject(app.scene);
-					so = app.scene.objects.get("Star");
-				} catch (Exception e){}
-				if (starTexture) {
-					ao.changeTexture("Star", "Mirror");
-				}else {
-					ao.changeTexture("Star", "NoiseMaterial");
-				}
-				starTexture = !starTexture;
-				break;
 			case Keyboard.KEY_F3:
 				FileDialog fd = new FileDialog(app.otherWindow);
 				fd.setVisible(true);
