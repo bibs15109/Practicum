@@ -18,7 +18,7 @@
     <cubemap>
         <name>EnvMap</name>
         <data>
-            <file>data/textures/Envir/Stars2/</file>
+            <file>data/textures/Envir/Stars4/</file>
         </data>
     </cubemap>
 
@@ -199,15 +199,15 @@
 	</object>
 	
 	<object>
-		<name>Endurance_object</name>
-		<data>
-			<parent>Endurance_parent_object</parent>
-			<mesh>endurance_mesh</mesh>
-			<material>endurance_material</material>
-			<rotation>30 210 0</rotation>
-			<scale>0.005 0.005 0.005</scale>
-		</data>
-	</object>
+        <name>Endurance_object</name>
+        <data>
+            <parent>Endurance_parent_object</parent>
+            <mesh>endurance_mesh</mesh>
+            <material>endurance_material</material>
+            <rotation>25 200 0</rotation>
+            <scale>0.005 0.005 0.005</scale>
+        </data>
+    </object>
 	
 	<object>
 		<name>Endurance_parent_object</name>
