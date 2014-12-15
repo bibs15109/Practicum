@@ -72,7 +72,8 @@ public class ViewScreen extends GameScreen {
 	public boolean bSwitched = false; // if the camera has been switched back;
 	public static boolean bLaserOn = false;
 	private static boolean explode = true,
-							changeRadius = true;
+							changeRadius = true,
+							shake = false;
 	private static double startTime;
 	//public boolean bFlightControl = false;
 	// End Jason
@@ -249,6 +250,7 @@ public class ViewScreen extends GameScreen {
 			case Keyboard.KEY_F7:
 				startExplosion = true;
 				Scene.startExplosion = true;
+				shake = !shake;
 				break;
 			case Keyboard.KEY_ADD: case Keyboard.KEY_RBRACKET:
 				ParticleMoonletEvent.GConstant *= 1.02;
@@ -355,14 +357,11 @@ public class ViewScreen extends GameScreen {
 		
 		// Jason Zhao: the event handler that updates all the Celestial Events:
 		if (bBegin){
-			
-			
 			this.celestialEventHandler.update(app, gameTime);
 			app.scene.objects.get("Endurance_object").transformation.mulBefore(Matrix4.createRotationZ((float)(gameTime.elapsed)));
 			app.scene.objects.get("Star").transformation.mulBefore(Matrix4.createRotationY((float)(-gameTime.elapsed)/2));
 			// Endurance red light blinking:
 			//System.out.println(gameTime.total % 10);
-			
 			
 			if (rl == null){
 				for (RenderLight light : rController.env.lights){
@@ -508,9 +507,24 @@ public class ViewScreen extends GameScreen {
 			ParticleMoonletEvent.fStarRadius *= .99;
 		}
 		explosion_1.startEvent();
+		if (shake) {
+			for (RenderCamera c : rController.env.cameras) {
+				shakeCamera(c);
+			}
+		}
 //		ao.reset("Star");
 //		ao.wobbleRadius("Star", t / 30);
 //		t += (Math.random()/2 + .5) * 1;
+	}
+	
+	private float t = 0;
+	private void shakeCamera(RenderCamera c) {		
+		float cos1 = (float)(Math.random() - .5);
+		float cos2 = (float)(Math.random() - .5);
+		float cos3 = (float)(Math.random() - .5);
+		Matrix4 trans = Matrix4.createTranslation(new Vector3(cos1, cos2, cos3));
+		c.sceneCamera.transformation.mulAfter(trans);
+		t += .1f;
 	}
 	
 	@Override
