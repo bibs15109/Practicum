@@ -28,8 +28,8 @@ public class ExplosionEvent extends CelestialEvent {
 				particle.transformation.setIdentity();
 				
 //				particle.v3_speed.set((float)(Math.random() - .5f), (float)(Math.random() - .5f), (float)(Math.random() - .5f));
-				particle.v3_speed.mul((float) Math.random() * 10);
-				particle.addRotation(new Vector3((float)Math.random() * 3.14f, (float)Math.random() * 3.14f, (float) Math.random() * 3.14f));
+				particle.v3_speed.mul((float) (Math.random() + 1) * 5);
+				particle.addRotation(new Vector3((float)Math.random() * 360, (float)Math.random() * 360, (float) Math.random() * 360));
 				particle.addScale(new Vector3(5f).add((float)Math.random() * 5));
 			}else {
 				particle.addTranslation(particle.v3_speed.clone().mul((float)gameTime.elapsed));
@@ -37,14 +37,7 @@ public class ExplosionEvent extends CelestialEvent {
 			
 		}
 		moveToOrigin = false;
-		
-//		if (Scene.starRadius >=2) {
-//			star.transformation.mulAfter(Matrix4.createScale(.99f));
-//			Scene.starRadius *= .99;
-//		}
-		
-		
-		
+			
 	}
 	
 

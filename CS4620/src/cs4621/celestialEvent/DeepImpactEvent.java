@@ -39,6 +39,15 @@ public class DeepImpactEvent extends CelestialEvent {
 		this.target = target;
 	}
 	
+
+	public void stopEvent(SceneApp app) {
+		for (int i = iDebrisStart; i <= iDebrisEnd; i++){
+			SceneObject sco = app.scene.objects.get("debris_"+i);
+			sco.transformation.setIdentity();
+		}
+		bEnabled = false;
+	}
+	
 	public void trigger(SceneApp app, GameTime gameTime){
 		// now assume that there is only 1 star in the center:
 		if (bHappening){

@@ -54,8 +54,6 @@ public class Scene {
 							bFlightControl = false,
 							bFollow_cam_active = false;
 	
-	public static double starRadius = 2;
-	
 	public static int iNumEjection = 500, iNumMoonlet = 2000;
 	
 	/**

@@ -147,7 +147,7 @@
 	<material>
 		<name>endurance_material</name>
 		<data>
-			<type>Phong_noAmb</type>
+			<type>Phong</type>
 			<diffuse>
 				<color>200 200 200 255</color>
 			</diffuse>

@@ -216,7 +216,6 @@ public class ViewScreen extends GameScreen {
 				}else {
 					ao.changeTexture("Star", "NoiseMaterial");
 				}
-				app.scene.sendEvent(new SceneObjectResourceEvent(so, SceneObjectResourceEvent.Type.Material));
 				starTexture = !starTexture;
 				break;
 			case Keyboard.KEY_F3:
@@ -250,9 +249,6 @@ public class ViewScreen extends GameScreen {
 			case Keyboard.KEY_F7:
 				startExplosion = true;
 				Scene.startExplosion = true;
-//				impact_1.stopEvent();
-//				impact_2.stopEvent();
-				
 				break;
 			case Keyboard.KEY_ADD: case Keyboard.KEY_RBRACKET:
 				ParticleMoonletEvent.GConstant *= 1.02;
@@ -465,11 +461,11 @@ public class ViewScreen extends GameScreen {
 	//explosion sequence
 	private void startExplosion(GameTime gameTime) {
 		Vector3d oldI = new Vector3d();
-		double coeff = gameTime.elapsed * 35;
-		if (Scene.starRadius <= 6 && changeRadius) {
-			ParticleMoonletEvent.GConstant *= (1 + Scene.starRadius/2500);
+		double coeff = gameTime.elapsed * 50;
+		if (ParticleMoonletEvent.fStarRadius <= 6 && changeRadius) {
+			ParticleMoonletEvent.GConstant *= (1 + ParticleMoonletEvent.fStarRadius/2500);
 			app.scene.objects.get("Star").transformation.mulAfter(Matrix4.createScale(1.001f));
-			Scene.starRadius *= 1.001;
+			ParticleMoonletEvent.fStarRadius *= 1.001;
 			for (RenderLight light : rController.env.lights) {
 				if (light.sceneObject.getID().name.compareTo("Light_1") == 0) {
 					oldI.set(light.sceneLight.intensity);
@@ -487,7 +483,7 @@ public class ViewScreen extends GameScreen {
 				explode = false;
 			}
 			double time = gameTime.total - startTime;
-			if (time > 2) {
+			if (ParticleMoonletEvent.eaten >= Scene.iNumMoonlet) {
 				explode(gameTime);
 			}
 			
@@ -503,11 +499,18 @@ public class ViewScreen extends GameScreen {
 		
 		SceneObject star= app.scene.objects.get("Star");
 		moonlet_1.stopEvent();
+		impact_1.stopEvent(app);
+		impact_2.stopEvent(app);
+		
+		ao.changeTexture("Star", "Mirror");
+		if (ParticleMoonletEvent.fStarRadius >=2) {
+			star.transformation.mulAfter(Matrix4.createScale(.99f));
+			ParticleMoonletEvent.fStarRadius *= .99;
+		}
 		explosion_1.startEvent();
 //		ao.reset("Star");
 //		ao.wobbleRadius("Star", t / 30);
 //		t += (Math.random()/2 + .5) * 1;
-		
 	}
 	
 	@Override

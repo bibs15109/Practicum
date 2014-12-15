@@ -11,7 +11,8 @@ public class ParticleMoonletEvent extends CelestialEvent {
 	public double dStartTime = 0;
 	public int iObjIndexStart, iObjIndexEnd;
 	public static float GConstant = 3;
-	public float fStarRadius = 1;
+	public static float fStarRadius = 2;
+	public static int eaten = 0;
 	
 	public ParticleMoonletEvent(int indexStart, int indexEnd){
 		//this.iNumParticles = iNumParticles;
@@ -37,8 +38,10 @@ public class ParticleMoonletEvent extends CelestialEvent {
 			Vector3 v3_accel = (sco.transformation.getTrans());
 			float fDistanceSq = (float)(Math.pow(v3_accel.x, 2) + Math.pow(v3_accel.y, 2) + Math.pow(v3_accel.z, 2));
 			if (fDistanceSq < fStarRadius*fStarRadius){
+				if (sco.transformation.getTrans().len() != 0) eaten ++;
 				sco.transformation.setIdentity();
 				sco.v3_speed.set(0);
+				
 				//System.out.println("Eaten 1! fStarRadius = "+fStarRadius);
 				continue;
 			}

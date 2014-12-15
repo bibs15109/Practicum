@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import cs4620.common.Mesh;
 import cs4620.common.Scene;
 import cs4620.common.SceneObject;
+import cs4620.common.event.SceneObjectResourceEvent;
 import egl.math.Matrix4;
 import egl.math.Vector3;
 
@@ -30,6 +31,7 @@ public class AnimationObject{
 	
 	public void changeTexture(String name, String newTexture) {
 		scene.objects.get(name).setMaterial(newTexture);
+		scene.sendEvent(new SceneObjectResourceEvent(scene.objects.get(name), SceneObjectResourceEvent.Type.Material));
 	}
 	
 	public void wobbleRadius(String name, double theta) {

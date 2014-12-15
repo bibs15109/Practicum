@@ -347,7 +347,7 @@ public class RenderMaterial implements IDisposable {
 		//periodic_velocity += (9.8 * periodic_counter) * .1;
 		if(unTime != GL.BadUniformLocation) GL20.glUniform1f(unTime,  (float)gameTime.total);
 		if(unMass != GL.BadUniformLocation) GL20.glUniform1f(unMass, ParticleMoonletEvent.GConstant);
-		if(unRadius != GL.BadUniformLocation) GL20.glUniform1f(unRadius, (float) Scene.starRadius / 2f);
+		if(unRadius != GL.BadUniformLocation) GL20.glUniform1f(unRadius, (float) ParticleMoonletEvent.fStarRadius / 2f);
 		
 		
 	}
