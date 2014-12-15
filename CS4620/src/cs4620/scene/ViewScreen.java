@@ -465,7 +465,7 @@ public class ViewScreen extends GameScreen {
 	//explosion sequence
 	private void startExplosion(GameTime gameTime) {
 		Vector3d oldI = new Vector3d();
-		double coeff = gameTime.elapsed * 25;
+		double coeff = gameTime.elapsed * 35;
 		if (Scene.starRadius <= 6 && changeRadius) {
 			ParticleMoonletEvent.GConstant *= (1 + Scene.starRadius/2500);
 			app.scene.objects.get("Star").transformation.mulAfter(Matrix4.createScale(1.001f));
@@ -474,7 +474,7 @@ public class ViewScreen extends GameScreen {
 				if (light.sceneObject.getID().name.compareTo("Light_1") == 0) {
 					oldI.set(light.sceneLight.intensity);
 					if (oldI.z < 800) {
-						Vector3d newI = new Vector3d (oldI.x - coeff, oldI.y, oldI.z + (coeff * 1.5));
+						Vector3d newI = new Vector3d (oldI.x - coeff, oldI.y, oldI.z + (coeff));
 						light.sceneLight.setIntensity(newI);
 					}	
 				}

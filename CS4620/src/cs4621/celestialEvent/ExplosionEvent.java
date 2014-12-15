@@ -19,15 +19,14 @@ public class ExplosionEvent extends CelestialEvent {
 		for (int i = iObjIndexStart; i < iObjIndexEnd; i++){
 			SceneObject particle = app.scene.objects.get("particle_"+i);
 			
-			float theta =(float) (Math.random() * 2 * Math.PI),
-					phi = (float) (Math.random() * 2 * Math.PI);
-			
-			particle.v3_speed.x = (float) (Math.cos(phi) * Math.sin(theta));
-			particle.v3_speed.y = (float) (Math.sin(phi) * Math.sin(theta));
-			particle.v3_speed.z = (float) (Math.cos(theta));
-			
 			if (moveToOrigin) {
+				float theta =(float) (Math.random() * 2 * Math.PI),
+						phi = (float) (Math.random() * 2 * Math.PI);
+				particle.v3_speed.x = (float) (Math.cos(phi) * Math.sin(theta));
+				particle.v3_speed.y = (float) (Math.sin(phi) * Math.sin(theta));
+				particle.v3_speed.z = (float) (Math.cos(theta));
 				particle.transformation.setIdentity();
+				
 //				particle.v3_speed.set((float)(Math.random() - .5f), (float)(Math.random() - .5f), (float)(Math.random() - .5f));
 				particle.v3_speed.mul((float) Math.random() * 10);
 				particle.addRotation(new Vector3((float)Math.random() * 3.14f, (float)Math.random() * 3.14f, (float) Math.random() * 3.14f));
