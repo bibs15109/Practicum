@@ -523,6 +523,9 @@ public class ViewScreen extends GameScreen {
 			Matrix4 trans = Matrix4.createTranslation(new Vector3(cos1, cos2, cos3));
 			c.sceneCamera.transformation.mulAfter(trans);
 			t-=.0001;
+		}else {
+			Matrix4 trans = Matrix4.createTranslation(new Vector3(0));
+			c.sceneCamera.transformation.mulAfter(trans);
 		}
 	}
 	
